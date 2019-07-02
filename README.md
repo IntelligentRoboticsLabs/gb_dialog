@@ -1,7 +1,7 @@
-# BICA-dialog
-**BICA-dialog simplifies the task of developing actions or behaviors related to dialogue.**
+# GB-dialog
+**GB-dialog simplifies the task of developing actions or behaviors related to dialogue.**
 
-BICA-dialog contains the library DialogInterface from which we will inherit to develop our dialogue actions. Each action will be specific to an intent ([Dialogflow concepts](https://dialogflow.com/docs)). The library offers methods to do text-to-speech tasks through [Google Speech sevice](https://cloud.google.com/speech-to-text/) and methods to do Natural Language Processing tasks through [Dialogflow](https://dialogflow.com/), using the ROS package dialogflow_ros ([official package](https://wiki.ros.org/dialogflow_ros),  [our custom dialogflow_ros](https://github.com/jginesclavero/dialogflow_ros)). The library also offers a method to do text-to-speech through the package [sound_play](https://wiki.ros.org/sound_play).
+GB-dialog contains the library DialogInterface from which we will inherit to develop our dialogue actions. Each action will be specific to an intent ([Dialogflow concepts](https://dialogflow.com/docs)). The library offers methods to do text-to-speech tasks through [Google Speech sevice](https://cloud.google.com/speech-to-text/) and methods to do Natural Language Processing tasks through [Dialogflow](https://dialogflow.com/), using the ROS package dialogflow_ros ([official package](https://wiki.ros.org/dialogflow_ros),  [our custom dialogflow_ros](https://github.com/jginesclavero/dialogflow_ros)). The library also offers a method to do text-to-speech through the package [sound_play](https://wiki.ros.org/sound_play).
 
 ## Installing
 If you don't have vcs tool, install it with ```sudo apt-get install python3-vcstool ```  
@@ -18,7 +18,7 @@ Install the dependencies ``` pip install -r [__gb_dialog_Path__]/dialogflow_ros/
 
 ## Use
 
-Below is an example of using the BICA-dialog library ([example file](https://github.com/IntelligentRoboticsLabs/BICA-dialog/blob/master/gb_dialog/test/test_DialogInterface.cpp)).
+Below is an example of using the GB-dialog library ([example file](https://github.com/IntelligentRoboticsLabs/gb_dialog/blob/master/gb_dialog/test/test_DialogInterface.cpp)).
 First of all we define our new class that inherits from DialogInterface, passing the intent for which our action was defined.
 We have to redefine the listenCallback method to read the Dialogflow output like a ROS message.
 
