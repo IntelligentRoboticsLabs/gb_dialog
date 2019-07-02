@@ -1,0 +1,9 @@
+repositories:
+  dialogflow_ros:
+    type: git
+    url: https://github.com/jginesclavero/dialogflow_ros.git
+    version: master
+  sound_play:
+    type: git
+    url: https://github.com/IntelligentRoboticsLabs/audio_common-release.git
+    version: release/kinetic/sound_play
