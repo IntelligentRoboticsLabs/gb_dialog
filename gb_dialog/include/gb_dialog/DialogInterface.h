@@ -50,7 +50,7 @@ namespace gb_dialog
 class DialogInterface
 {
 public:
-  DialogInterface(std::string intent);
+  explicit DialogInterface(std::string intent);
   DialogInterface();
 
   void dfCallback(const dialogflow_ros_msgs::DialogflowResult::ConstPtr& result);
@@ -73,8 +73,6 @@ private:
   std::regex intent_re_;
   ros::Time last_call_;
   void init();
-
-
 };
 };  // namespace gb_dialog
 

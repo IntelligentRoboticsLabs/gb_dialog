@@ -80,7 +80,7 @@ std::regex DialogInterface::getIntentRegex()
 void DialogInterface::dfCallback(const dialogflow_ros_msgs::DialogflowResult::ConstPtr& result)
 {
   std::regex intent_re_(intent_);
-  if(std::regex_match(result->intent, intent_re_) && result->intent.size() > 0)
+  if (std::regex_match(result->intent, intent_re_) && result->intent.size() > 0)
   {
     setCallTime(ros::Time::now());
     listenCallback(*result);

@@ -62,7 +62,7 @@ class DialogInterfaceTestRe: public gb_dialog::DialogInterface
 {
   public:
     dialogflow_ros_msgs::DialogflowResult result_;
-    DialogInterfaceTestRe(std::regex intent): DialogInterface(intent){}
+    explicit DialogInterfaceTestRe(std::regex intent): DialogInterface(intent){}
     void listenCallback(dialogflow_ros_msgs::DialogflowResult result)
     {
       ROS_INFO("[DialogInterfaceTest] listenCallback: intent %s", result.intent.c_str());
@@ -113,23 +113,6 @@ TEST(TESTSuite, listen)
 
   EXPECT_EQ(di.intent_ , intent_in);
 }
-
-//TEST(TESTSuite, listen_loop)
-//{
-//  std::string intent_in = "Default Welcome Intent";
-//  gb_dialog::DialogInterfaceTest di(intent_in);
-//
-//  ros::AsyncSpinner spinner(2);
-//  spinner.start();
-//
-//  while (ros::ok())
-//  {
-//    di.listen();
-//  }
-//
-//  //EXPECT_EQ(di.intent_ , intent_in);
-//}
-
 
 int main(int argc, char** argv)
 {

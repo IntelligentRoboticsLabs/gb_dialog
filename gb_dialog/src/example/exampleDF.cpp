@@ -44,7 +44,7 @@ namespace gb_dialog
 class ForwarderDF: public gb_dialog::DialogInterface
 {
   public:
-    ForwarderDF(std::string intent): nh_(), DialogInterface(intent)
+    explicit ForwarderDF(std::string intent): nh_(), DialogInterface(intent)
     {
       trigger_sub_ = nh_.subscribe("/listen", 1, &ForwarderDF::triggerCallback, this);
     }
