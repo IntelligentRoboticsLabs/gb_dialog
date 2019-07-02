@@ -4,9 +4,9 @@
 BICA-dialog contains the library DialogInterface from which we will inherit to develop our dialogue actions. Each action will be specific to an intent ([Dialogflow concepts](https://dialogflow.com/docs)). The library offers methods to do text-to-speech tasks through [Google Speech sevice](https://cloud.google.com/speech-to-text/) and methods to do Natural Language Processing tasks through [Dialogflow](https://dialogflow.com/), using the ROS package dialogflow_ros ([official package](https://wiki.ros.org/dialogflow_ros),  [our custom dialogflow_ros](https://github.com/jginesclavero/dialogflow_ros)). The library also offers a method to do text-to-speech through the package [sound_play](https://wiki.ros.org/sound_play).
 
 ## Installing
-If you don't have vcs tool, install it with ```sudo apt-get install python3-vcstool ```
-Import dependencies with ``` vcs import < gb_dialog_requirements.repos ```
-Install python requirements of dialogflow_ros [README](https://github.com/jginesclavero/dialogflow_ros/tree/master/dialogflow_ros))
+If you don't have vcs tool, install it with ```sudo apt-get install python3-vcstool ```  
+Import dependencies with ``` vcs import < gb_dialog_requirements.repos ```  
+Install python requirements of dialogflow_ros [README](https://github.com/jginesclavero/dialogflow_ros/tree/master/dialogflow_ros))  
 
 ### Creating a virtualenv for install Python modules
 If you have dependencies issues when you installed the above requirements  
