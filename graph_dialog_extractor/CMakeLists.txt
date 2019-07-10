@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   bica_msgs
   gb_dialog
+  roslint
 )
 
 catkin_package(
@@ -24,9 +25,18 @@ include_directories(
  ${catkin_INCLUDE_DIRS}
 )
 
+set(ROSLINT_CPP_OPTS "--filter=-build/header_guard,-runtime/references")
+roslint_cpp()
+
+add_library(floor_df_lib src/libs/floorDF_lib.cpp)
+add_dependencies(floor_df_lib ${catkin_EXPORTED_TARGETS})
+target_link_libraries(floor_df_lib ${catkin_LIBRARIES} gb_dialog)
+
 add_executable(graph_dialog_extractor_node src/graph_dialog_extractor_node.cpp)
 add_dependencies(graph_dialog_extractor_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(graph_dialog_extractor_node ${catkin_LIBRARIES})
+target_link_libraries(graph_dialog_extractor_node
+  floor_df_lib
+  ${catkin_LIBRARIES})
 
 add_executable(test_graph_dialog_extractor src/test_graph_dialog_extractor.cpp)
 add_dependencies(test_graph_dialog_extractor ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
