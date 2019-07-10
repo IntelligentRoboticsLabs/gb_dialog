@@ -66,6 +66,11 @@ void DialogInterface::init()
   setCallTime(ros::Time::now());
 }
 
+void DialogInterface::setIntent(std::string intent)
+{
+  intent_ = intent;
+}
+
 std::string DialogInterface::getIntent()
 {
   return intent_;
@@ -96,11 +101,15 @@ bool DialogInterface::speak(std::string str)
 
 bool DialogInterface::listen()
 {
-  ROS_INFO("[DialogInterface] listening...");
-  std_srvs::Empty srv;
-  ros::ServiceClient df_srv = nh_.serviceClient<std_srvs::Empty>(start_srv_, 1);
-  df_srv.call(srv);
-  return true;
+  if (getCallTime() + ros::Duration(0.5) < ros::Time::now() )
+  {
+    ROS_INFO("[DialogInterface] listening...");
+    std_srvs::Empty srv;
+    ros::ServiceClient df_srv = nh_.serviceClient<std_srvs::Empty>(start_srv_, 1);
+    df_srv.call(srv);
+    return true;
+  }
+  return false;
 }
 
 void DialogInterface::setIdleState(bool state)

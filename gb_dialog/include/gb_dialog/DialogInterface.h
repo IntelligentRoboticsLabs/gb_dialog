@@ -59,6 +59,7 @@ public:
   virtual void listenCallback(dialogflow_ros_msgs::DialogflowResult result){}
   std::string getIntent();
   std::regex getIntentRegex();
+  void setIntent(std::string intent);
   void setIdleState(bool state);
   bool isIdle();
   void setCallTime(ros::Time t);
