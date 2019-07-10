@@ -21,6 +21,7 @@
   <build_depend>bica_graph</build_depend>
   <build_depend>bica_msgs</build_depend>
   <build_depend>gb_dialog</build_depend>
+  <build_depend>roslint</build_depend>
 
   <build_export_depend>bica</build_export_depend>
   <build_export_depend>bica_graph</build_export_depend>
