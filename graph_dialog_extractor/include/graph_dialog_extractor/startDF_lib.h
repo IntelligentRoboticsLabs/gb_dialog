@@ -34,36 +34,31 @@
 
 /* Author: Jonatan Gines jginesclavero@gmail.com */
 
-/* Mantainer: Jonatan Gines jginesclavero@gmail.com */
+/* Mantainer: Miguel Alamillo nygagest@gmail.com  */
+
+#ifndef STARTDF__H
+#define STARTDF__H
 
 #include <ros/ros.h>
-#include <ros/console.h>
-#include "bica_graph/graph_client.h"
 #include <string>
+#include <gb_dialog/DialogInterface.h>
+#include "bica_graph/graph_client.h"
 
-class TestGraphDialogExtractor
+namespace graph_dialog_extractor
+{
+class StartDF: public gb_dialog::DialogInterface
 {
 public:
-  TestGraphDialogExtractor(): nh_()
-  {
-    graph_.add_node("leia", "robot");
-    graph_.add_node("jack", "person");
-    /*  graph_.add_edge(
-      "leia",
-      std::string("say:Hello world, //
-      my name is TIAGo and I will participate in SCIROC championship."),
-      "jack"); */
-    graph_.add_edge("leia", std::string("ask:bar_start.action"), "jack");
-    ROS_INFO("[%s] inited", ros::this_node::getName().c_str());
-  }
+  explicit StartDF(std::string intent);
+  void listenCallback(dialogflow_ros_msgs::DialogflowResult result);
+  void step();
+  bica_graph::StringEdge* edge_;
 private:
   ros::NodeHandle nh_;
+  dialogflow_ros_msgs::DialogflowResult result_;
   bica_graph::GraphClient graph_;
+  std::string intent_;
 };
+};  // namespace graph_dialog_extractor
 
-int main(int argc, char** argv)
-{
-  ros::init(argc, argv, "test_graph_extractor_dialog");
-  TestGraphDialogExtractor testGraphDialogExtractor;
-  return 0;
-}
+#endif

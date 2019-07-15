@@ -43,7 +43,7 @@
 #include <ros/console.h>
 #include <gb_dialog/DialogInterface.h>
 #include "bica_graph/graph_client.h"
-#include "graph_dialog_extractor/floorDF_lib.h"
+#include "graph_dialog_extractor/startDF_lib.h"
 #include <string>
 
 namespace graph_dialog_extractor
@@ -54,7 +54,7 @@ public:
   GraphDialogExtractor();
   void step();
   bica_graph::StringEdge* edge_;
-  graph_dialog_extractor::FloorDF floorDF;
+  graph_dialog_extractor::StartDF startDF;
 
 private:
   ros::NodeHandle nh_;

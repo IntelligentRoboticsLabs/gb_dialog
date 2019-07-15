@@ -35,35 +35,48 @@
 /* Author: Jonatan Gines jginesclavero@gmail.com */
 
 /* Mantainer: Jonatan Gines jginesclavero@gmail.com */
-
-#include <ros/ros.h>
-#include <ros/console.h>
-#include "bica_graph/graph_client.h"
+#include <graph_dialog_extractor/startDF_lib.h>
 #include <string>
+#include <list>
 
-class TestGraphDialogExtractor
+namespace graph_dialog_extractor
 {
-public:
-  TestGraphDialogExtractor(): nh_()
-  {
-    graph_.add_node("leia", "robot");
-    graph_.add_node("jack", "person");
-    /*  graph_.add_edge(
-      "leia",
-      std::string("say:Hello world, //
-      my name is TIAGo and I will participate in SCIROC championship."),
-      "jack"); */
-    graph_.add_edge("leia", std::string("ask:bar_start.action"), "jack");
-    ROS_INFO("[%s] inited", ros::this_node::getName().c_str());
-  }
-private:
-  ros::NodeHandle nh_;
-  bica_graph::GraphClient graph_;
-};
-
-int main(int argc, char** argv)
+StartDF::StartDF(std::string intent):
+  DialogInterface(intent), nh_("~")
 {
-  ros::init(argc, argv, "test_graph_extractor_dialog");
-  TestGraphDialogExtractor testGraphDialogExtractor;
-  return 0;
+  intent_ = intent;
+  step();
 }
+
+void StartDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
+{
+  ROS_INFO("[StartDF] listenCallback: intent %s", result.intent.c_str());
+  graph_.remove_edge(*edge_);
+  speak("Starting! Whish me luck!");
+  // TODO(fmrico): parece que bica-graph explota si le pongo response:
+  graph_.add_edge(edge_->get_target(), "response-" + "starting" , edge_->get_source());
+}
+
+void StartDF::step()
+{
+  ros::Rate loop_rate(1);
+  while (ros::ok())
+  {
+    std::list<bica_graph::StringEdge> edges_list =  graph_.get_string_edges();
+    for (auto it = edges_list.begin(); it != edges_list.end(); ++it)
+    {
+      std::string edge = it->get();
+      if (edge.find("ask:" + intent_) != std::string::npos)
+      {
+        speak("I'm ready to start");
+        edge_ = new bica_graph::StringEdge(*it);
+        ROS_INFO("[Ask] %s", edge.c_str());
+        listen();
+      }
+    }
+    ros::spinOnce();
+    loop_rate.sleep();
+  }
+}
+
+};  // namespace graph_dialog_extractor
