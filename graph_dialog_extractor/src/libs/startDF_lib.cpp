@@ -35,37 +35,48 @@
 /* Author: Jonatan Gines jginesclavero@gmail.com */
 
 /* Mantainer: Jonatan Gines jginesclavero@gmail.com */
-
-#ifndef GRAPHDIALOGEXTRACTOR_H_
-#define GRAPHDIALOGEXTRACTOR_H_
-
-#include <ros/ros.h>
-#include <ros/console.h>
-#include <gb_dialog/DialogInterface.h>
-#include "bica_graph/graph_client.h"
-#include "graph_dialog_extractor/floorDF_lib.h"
-#include "graph_dialog_extractor/orderReadyDF_lib.h"
-#include "graph_dialog_extractor/confirmOrderDF_lib.h"
-#include "graph_dialog_extractor/startDF_lib.h"
+#include <graph_dialog_extractor/startDF_lib.h>
 #include <string>
+#include <list>
 
 namespace graph_dialog_extractor
 {
-class GraphDialogExtractor: public gb_dialog::DialogInterface
+StartDF::StartDF(std::string intent):
+  DialogInterface(intent), nh_("~")
 {
-public:
-  GraphDialogExtractor();
-  void step();
-  bica_graph::StringEdge* edge_;
-  graph_dialog_extractor::FloorDF floorDF;
-  graph_dialog_extractor::OrderReadyDF orderReadyDF;
-  graph_dialog_extractor::ConfirmOrderDF confirmOrderDF;
-  graph_dialog_extractor::StartDF startDF;
+  intent_ = intent;
+  step();
+}
 
-private:
-  ros::NodeHandle nh_;
-  bica_graph::GraphClient graph_;
-  std::string saySplit(std::string str);
-};
-}  // namespace graph_dialog_extractor
-#endif
+void StartDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
+{
+  ROS_INFO("[StartDF] listenCallback: intent %s", result.intent.c_str());
+  graph_.remove_edge(*edge_);
+  speak("Starting! Whish me luck!");
+  // TODO(fmrico): parece que bica-graph explota si le pongo response:
+  graph_.add_edge(edge_->get_target(), "response-starting" , edge_->get_source());
+}
+
+void StartDF::step()
+{
+  ros::Rate loop_rate(1);
+  while (ros::ok())
+  {
+    std::list<bica_graph::StringEdge> edges_list =  graph_.get_string_edges();
+    for (auto it = edges_list.begin(); it != edges_list.end(); ++it)
+    {
+      std::string edge = it->get();
+      if (edge.find("ask:" + intent_) != std::string::npos)
+      {
+        speak("I'm ready to start");
+        edge_ = new bica_graph::StringEdge(*it);
+        ROS_INFO("[Ask] %s", edge.c_str());
+        listen();
+      }
+    }
+    ros::spinOnce();
+    loop_rate.sleep();
+  }
+}
+
+};  // namespace graph_dialog_extractor
