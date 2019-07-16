@@ -53,7 +53,7 @@ public:
       std::string("say:Hello world, //
       my name is TIAGo and I will participate in SCIROC championship."),
       "jack"); */
-    graph_.add_edge("leia", std::string("ask:elevator_current_floor.ask"), "jack");
+    graph_.add_edge("leia", std::string("ask: elevator_current_floor.ask"), "jack");
     ROS_INFO("[%s] inited", ros::this_node::getName().c_str());
   }
 private:
