@@ -45,7 +45,6 @@ FloorDF::FloorDF(std::string intent):
   DialogInterface(intent), nh_("~")
 {
   intent_ = intent;
-  step();
 }
 
 void FloorDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
@@ -62,29 +61,22 @@ void FloorDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
       floor_str = result.parameters[i].value[j];
     }
   speak("I'm in the " + floor_str + " floor. Thank you");
-  // TODO(fmrico): parece que bica-graph explota si le pongo response:
-  graph_.add_edge(edge_->get_target(), "response-" + floor_str , edge_->get_source());
+  graph_.add_edge(edge_->get_target(), "response: " + floor_str , edge_->get_source());
 }
 
 void FloorDF::step()
 {
-  ros::Rate loop_rate(1);
-  while (ros::ok())
+  std::list<bica_graph::StringEdge> edges_list =  graph_.get_string_edges();
+  for (auto it = edges_list.begin(); it != edges_list.end(); ++it)
   {
-    std::list<bica_graph::StringEdge> edges_list =  graph_.get_string_edges();
-    for (auto it = edges_list.begin(); it != edges_list.end(); ++it)
+    std::string edge = it->get();
+    if (edge.find("ask: " + intent_) != std::string::npos)
     {
-      std::string edge = it->get();
-      if (edge.find("ask:" + intent_) != std::string::npos)
-      {
-        speak("Hello, What is this floor?");
-        edge_ = new bica_graph::StringEdge(*it);
-        ROS_INFO("[Ask] %s", edge.c_str());
-        listen();
-      }
+      speak("Hello, What is this floor?");
+      edge_ = new bica_graph::StringEdge(*it);
+      ROS_INFO("[Ask] %s", edge.c_str());
+      listen();
     }
-    ros::spinOnce();
-    loop_rate.sleep();
   }
 }
 
