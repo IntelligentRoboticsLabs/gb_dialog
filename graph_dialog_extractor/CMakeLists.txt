@@ -29,13 +29,19 @@ set(ROSLINT_CPP_OPTS "--filter=-build/header_guard,-runtime/references")
 roslint_cpp()
 
 add_library(floor_df_lib src/libs/floorDF_lib.cpp)
+add_library(start_df_lib src/libs/startDF_lib.cpp)
+
 add_dependencies(floor_df_lib ${catkin_EXPORTED_TARGETS})
+add_dependencies(start_df_lib ${catkin_EXPORTED_TARGETS})
+
 target_link_libraries(floor_df_lib ${catkin_LIBRARIES} gb_dialog)
+target_link_libraries(start_df_lib ${catkin_LIBRARIES} gb_dialog)
 
 add_executable(graph_dialog_extractor_node src/graph_dialog_extractor_node.cpp)
 add_dependencies(graph_dialog_extractor_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(graph_dialog_extractor_node
   floor_df_lib
+  start_df_lib
   ${catkin_LIBRARIES})
 
 add_executable(test_graph_dialog_extractor src/test_graph_dialog_extractor.cpp)

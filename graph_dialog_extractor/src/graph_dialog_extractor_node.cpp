@@ -42,7 +42,7 @@
 
 namespace graph_dialog_extractor
 {
-GraphDialogExtractor::GraphDialogExtractor(): startDF("bar_start.action") {}
+GraphDialogExtractor::GraphDialogExtractor(): startDF("elevator_current_floor.ask") {}
 
 std::string GraphDialogExtractor::saySplit(std::string str)
 {
