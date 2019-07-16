@@ -42,7 +42,11 @@
 
 namespace graph_dialog_extractor
 {
-GraphDialogExtractor::GraphDialogExtractor(): floorDF("elevator_current_floor.ask") {}
+GraphDialogExtractor::GraphDialogExtractor():
+  floorDF("elevator_current_floor.ask"),
+  orderReadyDF("orderReady.ask"),
+  confirmOrderDF("confirmOrder.ask")
+{}
 
 std::string GraphDialogExtractor::saySplit(std::string str)
 {
@@ -59,7 +63,7 @@ void GraphDialogExtractor::step()
   for (auto it = edges_list.begin(); it != edges_list.end(); ++it)
   {
     std::string edge = it->get();
-    if (edge.find("say") != std::string::npos)
+    if (edge.find("say:") != std::string::npos)
     {
       std::string say_splited_edge = saySplit(edge);
       ROS_INFO("[Say] %s", say_splited_edge.c_str());
@@ -67,6 +71,9 @@ void GraphDialogExtractor::step()
       graph_.remove_edge(*it);
     }
   }
+  floorDF.step();
+  orderReadyDF.step();
+  confirmOrderDF.step();
 }
 }  // namespace graph_dialog_extractor
 
@@ -76,6 +83,7 @@ int main(int argc, char** argv)
   ros::NodeHandle n;
   graph_dialog_extractor::GraphDialogExtractor gExtractorNode;
   ros::Rate loop_rate(5);
+
   while (ros::ok())
   {
     gExtractorNode.step();
