@@ -44,6 +44,8 @@
 #include <gb_dialog/DialogInterface.h>
 #include "bica_graph/graph_client.h"
 #include "graph_dialog_extractor/floorDF_lib.h"
+#include "graph_dialog_extractor/orderReadyDF_lib.h"
+#include "graph_dialog_extractor/confirmOrderDF_lib.h"
 #include <string>
 
 namespace graph_dialog_extractor
@@ -55,6 +57,8 @@ public:
   void step();
   bica_graph::StringEdge* edge_;
   graph_dialog_extractor::FloorDF floorDF;
+  graph_dialog_extractor::OrderReadyDF orderReadyDF;
+  graph_dialog_extractor::ConfirmOrderDF confirmOrderDF;
 
 private:
   ros::NodeHandle nh_;
