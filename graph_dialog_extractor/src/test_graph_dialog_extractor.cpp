@@ -46,14 +46,19 @@ class TestGraphDialogExtractor
 public:
   TestGraphDialogExtractor(): nh_()
   {
+    ros::NodeHandle nh_("~");
+    std::string intent_;
+    nh_.getParam("intent", intent_);
+    ROS_INFO("This: %s",intent_.c_str());
     graph_.add_node("leia", "robot");
     graph_.add_node("jack", "person");
+
     /*  graph_.add_edge(
       "leia",
       std::string("say:Hello world, //
       my name is TIAGo and I will participate in SCIROC championship."),
       "jack"); */
-    graph_.add_edge("leia", std::string("ask: elevator_current_floor.ask"), "jack");
+    graph_.add_edge("leia", std::string("ask: ") + intent_, "jack");
     ROS_INFO("[%s] inited", ros::this_node::getName().c_str());
   }
 private:

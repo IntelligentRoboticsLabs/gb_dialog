@@ -34,38 +34,31 @@
 
 /* Author: Jonatan Gines jginesclavero@gmail.com */
 
-/* Mantainer: Jonatan Gines jginesclavero@gmail.com */
+/* Mantainer: Miguel Alamillo nygagest@gmail.com  */
 
-#ifndef GRAPHDIALOGEXTRACTOR_H_
-#define GRAPHDIALOGEXTRACTOR_H_
+#ifndef STARTDF__H
+#define STARTDF__H
 
 #include <ros/ros.h>
-#include <ros/console.h>
+#include <string>
 #include <gb_dialog/DialogInterface.h>
 #include "bica_graph/graph_client.h"
-#include "graph_dialog_extractor/floorDF_lib.h"
-#include "graph_dialog_extractor/orderReadyDF_lib.h"
-#include "graph_dialog_extractor/confirmOrderDF_lib.h"
-#include "graph_dialog_extractor/startDF_lib.h"
-#include <string>
 
 namespace graph_dialog_extractor
 {
-class GraphDialogExtractor: public gb_dialog::DialogInterface
+class StartDF: public gb_dialog::DialogInterface
 {
 public:
-  GraphDialogExtractor();
+  explicit StartDF(std::string intent);
+  void listenCallback(dialogflow_ros_msgs::DialogflowResult result);
   void step();
   bica_graph::StringEdge* edge_;
-  graph_dialog_extractor::FloorDF floorDF;
-  graph_dialog_extractor::OrderReadyDF orderReadyDF;
-  graph_dialog_extractor::ConfirmOrderDF confirmOrderDF;
-  graph_dialog_extractor::StartDF startDF;
-
 private:
   ros::NodeHandle nh_;
+  dialogflow_ros_msgs::DialogflowResult result_;
   bica_graph::GraphClient graph_;
-  std::string saySplit(std::string str);
+  std::string intent_;
 };
-}  // namespace graph_dialog_extractor
+};  // namespace graph_dialog_extractor
+
 #endif

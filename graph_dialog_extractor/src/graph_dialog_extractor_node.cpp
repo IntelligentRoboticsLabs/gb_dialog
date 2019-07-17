@@ -45,7 +45,8 @@ namespace graph_dialog_extractor
 GraphDialogExtractor::GraphDialogExtractor():
   floorDF("elevator_current_floor.ask"),
   orderReadyDF("orderReady.ask"),
-  confirmOrderDF("confirmOrder.ask")
+  confirmOrderDF("confirmOrder.ask"),
+  startDF("bar_start.action")
 {}
 
 std::string GraphDialogExtractor::saySplit(std::string str)
@@ -74,6 +75,7 @@ void GraphDialogExtractor::step()
   floorDF.step();
   orderReadyDF.step();
   confirmOrderDF.step();
+  startDF.step();
 }
 }  // namespace graph_dialog_extractor
 
