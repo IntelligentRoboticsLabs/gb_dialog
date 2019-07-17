@@ -54,7 +54,7 @@ void StartDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
   graph_.remove_edge(*edge_);
   speak("Starting! Whish me luck!");
   // TODO(fmrico): parece que bica-graph explota si le pongo response:
-  graph_.add_edge(edge_->get_target(), "response-starting" , edge_->get_source());
+  graph_.add_edge(edge_->get_target(), "response: starting" , edge_->get_source());
 }
 
 void StartDF::step()
