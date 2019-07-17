@@ -48,10 +48,9 @@ di.listen();
 ```
 
 ## Tests
-Compile ``` catkin_make tests gb_dialog ``` and execute the test
+Compile and execute the test
 
 ```
-roslaunch gb_dialog test_DialogInterface.launch
-rosrun gb_dialog gb_dialog-test
-
+roslaunch graph_dialog_extractor graph_dialog_extractor_alone.launch
+rosrun graph_dialog_extractor test_graph_dialog_extractor _intent:=[intentionToTest]
 ```

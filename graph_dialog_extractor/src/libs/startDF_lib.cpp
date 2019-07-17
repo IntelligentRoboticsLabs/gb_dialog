@@ -59,23 +59,17 @@ void StartDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
 
 void StartDF::step()
 {
-  ros::Rate loop_rate(1);
-  while (ros::ok())
+  std::list<bica_graph::StringEdge> edges_list =  graph_.get_string_edges();
+  for (auto it = edges_list.begin(); it != edges_list.end(); ++it)
   {
-    std::list<bica_graph::StringEdge> edges_list =  graph_.get_string_edges();
-    for (auto it = edges_list.begin(); it != edges_list.end(); ++it)
+    std::string edge = it->get();
+    if (edge.find("ask: " + intent_) != std::string::npos)
     {
-      std::string edge = it->get();
-      if (edge.find("ask:" + intent_) != std::string::npos)
-      {
-        speak("I'm ready to start");
-        edge_ = new bica_graph::StringEdge(*it);
-        ROS_INFO("[Ask] %s", edge.c_str());
-        listen();
-      }
+      speak("I'm ready to start");
+      edge_ = new bica_graph::StringEdge(*it);
+      ROS_INFO("[Ask] %s", edge.c_str());
+      listen();
     }
-    ros::spinOnce();
-    loop_rate.sleep();
   }
 }
 
