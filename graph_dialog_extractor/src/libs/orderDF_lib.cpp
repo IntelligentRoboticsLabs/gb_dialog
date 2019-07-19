@@ -35,29 +35,47 @@
 /* Author: Jonatan Gines jginesclavero@gmail.com */
 
 /* Mantainer: Jonatan Gines jginesclavero@gmail.com */
-#include <graph_dialog_extractor/startDF_lib.h>
+#include <graph_dialog_extractor/orderDF_lib.h>
 #include <string>
 #include <list>
 
 namespace graph_dialog_extractor
 {
-StartDF::StartDF(std::string intent):
-  DialogInterface(intent)
+OrderDF::OrderDF(std::string intent):
+  DialogInterface(intent), nh_("~")
 {
   intent_ = intent;
-  step();
 }
 
-void StartDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
+void OrderDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
 {
-  ROS_INFO("[StartDF] listenCallback: intent %s", result.intent.c_str());
+  ROS_INFO("[OrderDF] listenCallback: intent %s", result.intent.c_str());
   graph_.remove_edge(*edge_);
-  speak("Starting! Whish me luck!");
-  // TODO(fmrico): parece que bica-graph explota si le pongo response:
-  graph_.add_edge(edge_->get_target(), "response: starting" , edge_->get_source());
+  std::string total_items;
+
+  for (int i = 0; i < result.parameters.size(); i++)
+  {
+    for (int j = 0; j  < result.parameters[i].value.size(); j++)
+    {
+      ROS_INFO("[GraphDialogExtractor] listenCallback: parameter %s value %s",
+        result.parameters[i].param_name.c_str(),
+        result.parameters[i].value[j].c_str());
+      if (i == 0)
+      {
+        total_items = result.parameters[i].value[j];
+      }
+      else
+      {
+        total_items = total_items + " , " + result.parameters[i].value[j];
+      }
+    }
+  }
+
+  speak("You have ordered " + total_items);
+  graph_.add_edge(edge_->get_target(), "response:" + total_items, edge_->get_source());
 }
 
-void StartDF::step()
+void OrderDF::step()
 {
   std::list<bica_graph::StringEdge> edges_list =  graph_.get_string_edges();
   for (auto it = edges_list.begin(); it != edges_list.end(); ++it)
@@ -65,7 +83,7 @@ void StartDF::step()
     std::string edge = it->get();
     if (edge.find("ask: " + intent_) != std::string::npos)
     {
-      speak("I'm ready to start");
+      speak("Hello, What are you going to take?");
       edge_ = new bica_graph::StringEdge(*it);
       ROS_INFO("[Ask] %s", edge.c_str());
       listen();
