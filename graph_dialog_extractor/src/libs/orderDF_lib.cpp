@@ -66,13 +66,13 @@ void OrderDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
       }
       else
       {
-        total_items = total_items + " , " + result.parameters[i].value[j];
+        total_items = total_items + " " + result.parameters[i].value[j];
       }
     }
   }
 
   speak("You have ordered " + total_items);
-  graph_.add_edge(edge_->get_target(), "response:" + total_items, edge_->get_source());
+  graph_.add_edge(edge_->get_target(), "response: " + total_items, edge_->get_source());
 }
 
 void OrderDF::step()
