@@ -35,42 +35,30 @@
 /* Author: Jonatan Gines jginesclavero@gmail.com */
 
 /* Mantainer: Jonatan Gines jginesclavero@gmail.com */
-#include <graph_dialog_extractor/startDF_lib.h>
+
+#ifndef ORDERDF__H
+#define ORDERDF__H
+
+#include <ros/ros.h>
 #include <string>
-#include <list>
+#include <gb_dialog/DialogInterface.h>
+#include "bica_graph/graph_client.h"
 
 namespace graph_dialog_extractor
 {
-StartDF::StartDF(std::string intent):
-  DialogInterface(intent)
+class OrderDF: public gb_dialog::DialogInterface
 {
-  intent_ = intent;
-  step();
-}
-
-void StartDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
-{
-  ROS_INFO("[StartDF] listenCallback: intent %s", result.intent.c_str());
-  graph_.remove_edge(*edge_);
-  speak("Starting! Whish me luck!");
-  // TODO(fmrico): parece que bica-graph explota si le pongo response:
-  graph_.add_edge(edge_->get_target(), "response: starting" , edge_->get_source());
-}
-
-void StartDF::step()
-{
-  std::list<bica_graph::StringEdge> edges_list =  graph_.get_string_edges();
-  for (auto it = edges_list.begin(); it != edges_list.end(); ++it)
-  {
-    std::string edge = it->get();
-    if (edge.find("ask: " + intent_) != std::string::npos)
-    {
-      speak("I'm ready to start");
-      edge_ = new bica_graph::StringEdge(*it);
-      ROS_INFO("[Ask] %s", edge.c_str());
-      listen();
-    }
-  }
-}
-
+public:
+  explicit OrderDF(std::string intent);
+  void listenCallback(dialogflow_ros_msgs::DialogflowResult result);
+  void step();
+  bica_graph::StringEdge* edge_;
+private:
+  ros::NodeHandle nh_;
+  dialogflow_ros_msgs::DialogflowResult result_;
+  bica_graph::GraphClient graph_;
+  std::string intent_;
+};
 };  // namespace graph_dialog_extractor
+
+#endif

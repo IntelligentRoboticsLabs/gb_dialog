@@ -30,12 +30,18 @@ roslint_cpp()
 
 add_library(floor_df_lib src/libs/floorDF_lib.cpp)
 add_library(start_df_lib src/libs/startDF_lib.cpp)
+add_library(order_df_lib src/libs/orderDF_lib.cpp)
+
 
 add_dependencies(floor_df_lib ${catkin_EXPORTED_TARGETS})
 add_dependencies(start_df_lib ${catkin_EXPORTED_TARGETS})
+add_dependencies(order_df_lib ${catkin_EXPORTED_TARGETS})
+
 
 target_link_libraries(floor_df_lib ${catkin_LIBRARIES} gb_dialog)
 target_link_libraries(start_df_lib ${catkin_LIBRARIES} gb_dialog)
+target_link_libraries(order_df_lib ${catkin_LIBRARIES} gb_dialog)
+
 
 add_library(order_ready_df_lib src/libs/orderReadyDF_lib.cpp)
 add_dependencies(order_ready_df_lib ${catkin_EXPORTED_TARGETS})
@@ -52,6 +58,7 @@ target_link_libraries(graph_dialog_extractor_node
   order_ready_df_lib
   confirm_order_df_lib
   start_df_lib
+  order_df_lib
   ${catkin_LIBRARIES})
 
 add_executable(test_graph_dialog_extractor src/test_graph_dialog_extractor.cpp)
