@@ -66,10 +66,9 @@ void GraphDialogExtractor::step()
     std::string edge = it->get();
     if (edge.find("say:") != std::string::npos)
     {
-      std::string say_splited_edge = saySplit(edge);
-      ROS_INFO("[Say] %s", say_splited_edge.c_str());
-      speak(say_splited_edge);
       graph_.remove_edge(*it);
+      std::string say_splited_edge = saySplit(edge);
+      speak(say_splited_edge);
     }
   }
   floorDF.step();
