@@ -37,6 +37,8 @@
 /* Mantainer: Jonatan Gines jginesclavero@gmail.com */
 #include <graph_dialog_extractor/orderDF_lib.h>
 #include <string>
+#include <algorithm>
+#include <cctype>
 #include <list>
 
 namespace graph_dialog_extractor
@@ -60,14 +62,14 @@ void OrderDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
       ROS_INFO("[GraphDialogExtractor] listenCallback: parameter %s value %s",
         result.parameters[i].param_name.c_str(),
         result.parameters[i].value[j].c_str());
+
+      std::string item = result.parameters[i].value[j];
+      std::transform(item.begin(), item.end(), item.begin(),
+          [](unsigned char c){ return std::tolower(c); });
       if (i == 0)
-      {
-        total_items = result.parameters[i].value[j];
-      }
+        total_items = item;
       else
-      {
-        total_items = total_items + " " + result.parameters[i].value[j];
-      }
+        total_items = total_items + " " + item;
     }
   }
 
