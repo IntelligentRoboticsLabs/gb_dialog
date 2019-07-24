@@ -44,37 +44,47 @@
 namespace graph_dialog_extractor
 {
 OrderDF::OrderDF(std::string intent):
-  DialogInterface(intent), nh_("~")
+  DialogInterface(intent), nh_("~"), edge_()
 {
   intent_ = intent;
 }
 
 void OrderDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
 {
+  if (edge_ == NULL)
+    return;
   ROS_INFO("[OrderDF] listenCallback: intent %s", result.intent.c_str());
-  graph_.remove_edge(*edge_);
   std::string total_items;
-
-  for (int i = 0; i < result.parameters.size(); i++)
+  if (result.fulfillment_text != "")
   {
-    for (int j = 0; j  < result.parameters[i].value.size(); j++)
-    {
-      ROS_INFO("[GraphDialogExtractor] listenCallback: parameter %s value %s",
-        result.parameters[i].param_name.c_str(),
-        result.parameters[i].value[j].c_str());
-
-      std::string item = result.parameters[i].value[j];
-      std::transform(item.begin(), item.end(), item.begin(),
-          [](unsigned char c){ return std::tolower(c); });
-      if (i == 0)
-        total_items = item;
-      else
-        total_items = total_items + " " + item;
-    }
+    ROS_WARN("[OrderDF] %s", result.fulfillment_text.c_str());
+    speak(result.fulfillment_text);
   }
+  else
+  {
+    graph_.remove_edge(*edge_);
+    for (int i = 0; i < result.parameters.size(); i++)
+    {
+      for (int j = 0; j  < result.parameters[i].value.size(); j++)
+      {
+        ROS_INFO("[GraphDialogExtractor] listenCallback: parameter %s value %s",
+          result.parameters[i].param_name.c_str(),
+          result.parameters[i].value[j].c_str());
 
-  speak("You have ordered " + total_items);
-  graph_.add_edge(edge_->get_target(), "response: " + total_items, edge_->get_source());
+        std::string item = result.parameters[i].value[j];
+        std::transform(item.begin(), item.end(), item.begin(),
+            [](unsigned char c){ return std::tolower(c); });
+        if (i == 0)
+          total_items = item;
+        else
+          total_items = total_items + " " + item;
+      }
+    }
+
+    speak("You have ordered " + total_items);
+    graph_.add_edge(edge_->get_target(), "response: " + total_items, edge_->get_source());
+    edge_ = NULL;
+  }
 }
 
 void OrderDF::step()

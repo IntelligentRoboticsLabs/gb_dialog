@@ -42,19 +42,21 @@
 namespace graph_dialog_extractor
 {
 StartDF::StartDF(std::string intent):
-  DialogInterface(intent)
+  DialogInterface(intent), edge_()
 {
   intent_ = intent;
-  step();
 }
 
 void StartDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
 {
+  if (edge_ == NULL)
+    return;
+
   ROS_INFO("[StartDF] listenCallback: intent %s", result.intent.c_str());
   graph_.remove_edge(*edge_);
   speak("Starting! Whish me luck!");
-  // TODO(fmrico): parece que bica-graph explota si le pongo response:
   graph_.add_edge(edge_->get_target(), "response: starting" , edge_->get_source());
+  edge_ = NULL;
 }
 
 void StartDF::step()

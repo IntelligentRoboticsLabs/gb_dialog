@@ -42,17 +42,21 @@
 namespace graph_dialog_extractor
 {
 OrderReadyDF::OrderReadyDF(std::string intent):
-  DialogInterface(intent), nh_("~")
+  DialogInterface(intent), nh_("~"), edge_()
 {
   intent_ = intent;
 }
 
 void OrderReadyDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
 {
+  if (edge_ == NULL)
+    return;
+
   ROS_INFO("[OrderReadyDF] listenCallback: intent %s", result.intent.c_str());
   graph_.remove_edge(*edge_);
   speak("Thank you. I will check the order");
   graph_.add_edge("barman", "response:", "leia");
+  edge_ = NULL;
 }
 
 void OrderReadyDF::step()

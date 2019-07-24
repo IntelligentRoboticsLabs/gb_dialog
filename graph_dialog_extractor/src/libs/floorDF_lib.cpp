@@ -42,13 +42,16 @@
 namespace graph_dialog_extractor
 {
 FloorDF::FloorDF(std::string intent):
-  DialogInterface(intent), nh_("~")
+  DialogInterface(intent), nh_("~"), edge_()
 {
   intent_ = intent;
 }
 
 void FloorDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
 {
+  if (edge_ == NULL)
+    return;
+
   ROS_INFO("[FloorDF] listenCallback: intent %s", result.intent.c_str());
   graph_.remove_edge(*edge_);
   std::string floor_str;
@@ -62,6 +65,7 @@ void FloorDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
     }
   speak("I'm in the " + floor_str + " floor. Thank you");
   graph_.add_edge(edge_->get_target(), "response: " + floor_str , edge_->get_source());
+  edge_ = NULL;
 }
 
 void FloorDF::step()
