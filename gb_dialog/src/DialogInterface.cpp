@@ -94,6 +94,7 @@ void DialogInterface::dfCallback(const dialogflow_ros_msgs::DialogflowResult::Co
 
 bool DialogInterface::speak(std::string str)
 {
+  boost::replace_all(str, "_", " ");
   sound_play::Talk srv;
   srv.request.str = str;
   talk_client_.call(srv);

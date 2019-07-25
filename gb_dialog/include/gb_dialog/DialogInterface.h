@@ -41,6 +41,7 @@
 #include <ros/ros.h>
 #include <string>
 #include <dialogflow_ros_msgs/DialogflowResult.h>
+#include <boost/algorithm/string/replace.hpp>
 #include <std_srvs/Empty.h>
 #include <sound_play/Talk.h>
 #include <regex>
