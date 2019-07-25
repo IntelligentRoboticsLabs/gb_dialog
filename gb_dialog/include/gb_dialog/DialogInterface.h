@@ -70,7 +70,7 @@ private:
   bool idle_;
   ros::NodeHandle nh_;
   std::string intent_, results_topic_, start_srv_;
-  ros::ServiceClient talk_client_;
+  ros::ServiceClient talk_client_, sound_client_;
   ros::Subscriber df_result_sub_;
   std::regex intent_re_;
   ros::Time last_call_;

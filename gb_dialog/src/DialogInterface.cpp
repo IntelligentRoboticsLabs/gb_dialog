@@ -61,6 +61,7 @@ void DialogInterface::init()
 
   df_result_sub_ = nh_.subscribe(results_topic_, 1, &DialogInterface::dfCallback, this);
   talk_client_ = nh_.serviceClient<sound_play::Talk>("/gb_dialog/talk");
+  sound_client_ = nh_.serviceClient<std_srvs::Empty>("/gb_dialog/listening_sound");
 
   idle_ = true;
   setCallTime(ros::Time::now());
@@ -102,10 +103,11 @@ bool DialogInterface::speak(std::string str)
 
 bool DialogInterface::listen()
 {
-  if (getCallTime() + ros::Duration(0.5) < ros::Time::now() )
+  if (getCallTime() + ros::Duration(0.2) < ros::Time::now() )
   {
-    ROS_INFO("[DialogInterface] listening...");
     std_srvs::Empty srv;
+    sound_client_.call(srv);
+    ROS_INFO("[DialogInterface] listening...");
     ros::ServiceClient df_srv = nh_.serviceClient<std_srvs::Empty>(start_srv_, 1);
     df_srv.call(srv);
     return true;
