@@ -51,6 +51,7 @@ OrderDF::OrderDF(std::string intent):
 
 void OrderDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
 {
+  ROS_INFO("[OrderDF] listenCallback: intent %s", result.intent.c_str());
   if (edge_ == NULL)
     return;
   ROS_INFO("[OrderDF] listenCallback: intent %s", result.intent.c_str());
@@ -74,7 +75,7 @@ void OrderDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
         std::string item = result.parameters[i].value[j];
         std::transform(item.begin(), item.end(), item.begin(),
             [](unsigned char c){ return std::tolower(c); });
-        if (i == 0)
+        if (j == 0)
           total_items = item;
         else
           total_items = total_items + " " + item;
