@@ -21,9 +21,11 @@
   <div id="is_listening_text">LISTENING...</div>
   <div id="hri_text">HRI info</div>
 
-  <script>
+  <div class="footer">
+    <img class="img-footer-left" src="img/urjc_logo.png"/>
+  </div>
 
-    var cnt = 0;
+  <script>
 
     var ros = new ROSLIB.Ros({
       url : 'ws://localhost:9090'
@@ -43,19 +45,18 @@
 
     var hri_listener = new ROSLIB.Topic({
       ros : ros,
-      name : '/dialog_gui',
+      name : '/dialog_gui/talk',
       messageType : 'std_msgs/String'
     });
 
     var is_listening = new ROSLIB.Topic({
       ros : ros,
-      name : '/is_listening',
+      name : '/dialog_gui/is_listening',
       messageType : 'std_msgs/Bool'
     });
 
     hri_listener.subscribe(function(message) {
-      cnt++;
-      document.getElementById("hri_text").innerHTML = message.data + " " + cnt;
+      document.getElementById("hri_text").innerHTML = message.data;
     });
 
     is_listening.subscribe(function(message) {

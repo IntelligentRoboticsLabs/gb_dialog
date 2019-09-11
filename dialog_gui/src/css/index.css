@@ -8,6 +8,7 @@ html, body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  font-size: 70px;
 }
 
 #is_listening_text {
@@ -15,7 +16,34 @@ html, body {
   top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 100px;
+  font-size: 120px;
   font-weight: bold;
-  color: red;
+  color: green;
+  visibility: hidden;
 }
+
+/*** Footer ***/
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: LightGray;
+  color: white;
+  text-align: center;
+}
+
+.footer img {
+  width: 8%;
+}
+
+.img-footer-left {
+  float: left;
+  margin-left: 45px;
+}
+
+.img-footer-right {
+  float: right;
+  margin-right: 45px;
+}
+/*** End Footer ***/
