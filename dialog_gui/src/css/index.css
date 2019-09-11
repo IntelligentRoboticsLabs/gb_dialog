@@ -1,0 +1,21 @@
+html, body {
+  height: 100%;
+  font-size: 25px;
+}
+
+#hri_text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#is_listening_text {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 100px;
+  font-weight: bold;
+  color: red;
+}

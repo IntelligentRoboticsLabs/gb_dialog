@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width"/>
+  <meta charset="utf-8">
+  <link type="text/css" rel="stylesheet" href="css/index.css"/>
+  <!--
+  <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+  <script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+  -->
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/eventemitter2.min.js"></script>
+  <script type="text/javascript" src="js/roslib.min.js"></script>
+</head>
+
+<body>
+  <div id="is_listening_text">LISTENING...</div>
+  <div id="hri_text">HRI info</div>
+
+  <script>
+
+    var cnt = 0;
+
+    var ros = new ROSLIB.Ros({
+      url : 'ws://localhost:9090'
+    });
+
+    ros.on('connection', function() {
+      console.log('Connected to websocket server.');
+    });
+
+    ros.on('error', function(error) {
+      console.log('Error connecting to websocket server: ', error);
+    });
+
+    ros.on('close', function() {
+      console.log('Connection to websocket server closed.');
+    });
+
+    var hri_listener = new ROSLIB.Topic({
+      ros : ros,
+      name : '/dialog_gui',
+      messageType : 'std_msgs/String'
+    });
+
+    var is_listening = new ROSLIB.Topic({
+      ros : ros,
+      name : '/is_listening',
+      messageType : 'std_msgs/Bool'
+    });
+
+    hri_listener.subscribe(function(message) {
+      cnt++;
+      document.getElementById("hri_text").innerHTML = message.data + " " + cnt;
+    });
+
+    is_listening.subscribe(function(message) {
+      console.log('Received message on ' + is_listening.name + ': ' + message.data);
+      if (message.data == true){
+        console.log('true processed');
+        document.getElementById("is_listening_text").style.visibility = "visible";
+      }else{
+        console.log('false processed');
+        document.getElementById("is_listening_text").style.visibility = "hidden";
+      }
+    });
+
+  </script>
+</body>
+</html>
