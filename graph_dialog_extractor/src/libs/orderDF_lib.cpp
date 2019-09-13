@@ -96,7 +96,7 @@ void OrderDF::step()
     std::string edge = it->get();
     if (edge.find("ask: " + intent_) != std::string::npos)
     {
-      speak("Hello, What are you going to take?");
+      speak("What are you going to take?");
       edge_ = new bica_graph::StringEdge(*it);
       ROS_INFO("[Ask] %s", edge.c_str());
       listen();

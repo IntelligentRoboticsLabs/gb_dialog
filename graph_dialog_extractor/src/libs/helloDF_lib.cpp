@@ -35,40 +35,42 @@
 /* Author: Jonatan Gines jginesclavero@gmail.com */
 
 /* Mantainer: Jonatan Gines jginesclavero@gmail.com */
-
-#include <ros/ros.h>
-#include <ros/console.h>
-#include "bica_graph/graph_client.h"
+#include <graph_dialog_extractor/helloDF_lib.h>
 #include <string>
+#include <list>
 
-class TestGraphDialogExtractor
+namespace graph_dialog_extractor
 {
-public:
-  TestGraphDialogExtractor(): nh_()
-  {
-    ros::NodeHandle nh_("~");
-    std::string intent_;
-    nh_.getParam("intent", intent_);
-    ROS_INFO("This: %s",intent_.c_str());
-    graph_.add_node("sonny", "robot");
-    graph_.add_node("jack", "person");
-
-    /*  graph_.add_edge(
-      "sonny",
-      std::string("say:Hello world, //
-      my name is TIAGo and I will participate in SCIROC championship."),
-      "jack"); */
-    graph_.add_edge("sonny", std::string("ask: ") + intent_, "jack");
-    ROS_INFO("[%s] inited", ros::this_node::getName().c_str());
-  }
-private:
-  ros::NodeHandle nh_;
-  bica_graph::GraphClient graph_;
-};
-
-int main(int argc, char** argv)
+HelloDF::HelloDF(std::string intent):
+  DialogInterface(intent), edge_()
 {
-  ros::init(argc, argv, "test_graph_extractor_dialog");
-  TestGraphDialogExtractor testGraphDialogExtractor;
-  return 0;
+  intent_ = intent;
 }
+
+void HelloDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
+{
+  if (edge_ == NULL)
+    return;
+
+  ROS_INFO("[HelloDF] listenCallback: intent %s", result.intent.c_str());
+  graph_.remove_edge(*edge_);
+  graph_.add_edge(edge_->get_target(), "response: hello" , edge_->get_source());
+  edge_ = NULL;
+}
+
+void HelloDF::step()
+{
+  std::list<bica_graph::StringEdge> edges_list =  graph_.get_string_edges();
+  for (auto it = edges_list.begin(); it != edges_list.end(); ++it)
+  {
+    std::string edge = it->get();
+    if (edge.find("ask: " + intent_) != std::string::npos)
+    {
+      edge_ = new bica_graph::StringEdge(*it);
+      ROS_INFO("[Ask] %s", edge.c_str());
+      listen();
+    }
+  }
+}
+
+};  // namespace graph_dialog_extractor

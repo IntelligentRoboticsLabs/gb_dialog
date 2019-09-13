@@ -55,7 +55,7 @@ void OrderReadyDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
   ROS_INFO("[OrderReadyDF] listenCallback: intent %s", result.intent.c_str());
   graph_.remove_edge(*edge_);
   speak("Thank you. I will check the order");
-  graph_.add_edge("barman", "response:", "leia");
+  graph_.add_edge("barman", "response: ready", "sonny");
   edge_ = NULL;
 }
 
