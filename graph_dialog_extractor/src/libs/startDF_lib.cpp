@@ -54,7 +54,7 @@ void StartDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
 
   ROS_INFO("[StartDF] listenCallback: intent %s", result.intent.c_str());
   graph_.remove_edge(*edge_);
-  speak("Starting! Whish me luck!");
+  speak("Starting! Wish me luck!");
   graph_.add_edge(edge_->get_target(), "response: starting" , edge_->get_source());
   edge_ = NULL;
 }
