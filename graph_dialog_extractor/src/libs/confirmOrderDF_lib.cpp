@@ -45,7 +45,7 @@ ConfirmOrderDF::ConfirmOrderDF(std::string intent):
   DialogInterface(intent), nh_("~"), edge_()
 {
   intent_ = intent;
-  robot_id = "leia";
+  robot_id = "sonny";
 }
 
 void ConfirmOrderDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
@@ -56,7 +56,7 @@ void ConfirmOrderDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result
   ROS_INFO("[ConfirmOrderDF] listenCallback: intent %s", result.intent.c_str());
   graph_.remove_edge(*edge_);
   speak("Thank you.");
-  graph_.add_edge(robot_id, "response:", robot_id);
+  graph_.add_edge(robot_id, "response: ready", robot_id);
 
   edge_ = NULL;
 }

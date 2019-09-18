@@ -61,10 +61,18 @@ void DialogInterface::init()
 
   df_result_sub_ = nh_.subscribe(results_topic_, 1, &DialogInterface::dfCallback, this);
   talk_client_ = nh_.serviceClient<sound_play::Talk>("/gb_dialog/talk");
-  sound_client_ = nh_.serviceClient<std_srvs::Empty>("/gb_dialog/listening_sound");
+  listening_gui_ = nh_.advertise<std_msgs::Bool>("/dialog_gui/is_listening", 1);
+  speak_gui_ = nh_.advertise<std_msgs::String>("/dialog_gui/talk", 1);
 
   idle_ = true;
   setCallTime(ros::Time::now());
+  std_msgs::String str_msg;
+  std_msgs::Bool bool_msg;
+  str_msg.data = "";
+  speak_gui_.publish(str_msg);
+  bool_msg.data = false;
+  listening_gui_.publish(bool_msg);
+
 }
 
 void DialogInterface::setIntent(std::string intent)
@@ -90,12 +98,18 @@ void DialogInterface::dfCallback(const dialogflow_ros_msgs::DialogflowResult::Co
   {
     setCallTime(ros::Time::now());
     listenCallback(*result);
+    std_msgs::Bool msg;
+    msg.data = false;
+    listening_gui_.publish(msg);
   }
 }
 
 bool DialogInterface::speak(std::string str)
 {
   boost::replace_all(str, "_", " ");
+  std_msgs::String msg;
+  msg.data = str;
+  speak_gui_.publish(msg);
   sound_play::Talk srv;
   srv.request.str = str;
   talk_client_.call(srv);
@@ -106,7 +120,9 @@ bool DialogInterface::listen()
   if (getCallTime() + ros::Duration(0.2) < ros::Time::now() )
   {
     std_srvs::Empty srv;
-    sound_client_.call(srv);
+    std_msgs::Bool msg;
+    msg.data = true;
+    listening_gui_.publish(msg);
     ROS_INFO("[DialogInterface] listening...");
     ros::ServiceClient df_srv = nh_.serviceClient<std_srvs::Empty>(start_srv_, 1);
     df_srv.call(srv);

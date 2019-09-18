@@ -34,41 +34,31 @@
 
 /* Author: Jonatan Gines jginesclavero@gmail.com */
 
-/* Mantainer: Jonatan Gines jginesclavero@gmail.com */
+/* Mantainer: Miguel Alamillo nygagest@gmail.com  */
+
+#ifndef HELLODF__H
+#define HELLODF__H
 
 #include <ros/ros.h>
-#include <ros/console.h>
-#include "bica_graph/graph_client.h"
 #include <string>
+#include <gb_dialog/DialogInterface.h>
+#include "bica_graph/graph_client.h"
 
-class TestGraphDialogExtractor
+namespace graph_dialog_extractor
+{
+class HelloDF: public gb_dialog::DialogInterface
 {
 public:
-  TestGraphDialogExtractor(): nh_()
-  {
-    ros::NodeHandle nh_("~");
-    std::string intent_;
-    nh_.getParam("intent", intent_);
-    ROS_INFO("This: %s",intent_.c_str());
-    graph_.add_node("sonny", "robot");
-    graph_.add_node("jack", "person");
-
-    /*  graph_.add_edge(
-      "sonny",
-      std::string("say:Hello world, //
-      my name is TIAGo and I will participate in SCIROC championship."),
-      "jack"); */
-    graph_.add_edge("sonny", std::string("ask: ") + intent_, "jack");
-    ROS_INFO("[%s] inited", ros::this_node::getName().c_str());
-  }
+  explicit HelloDF(std::string intent);
+  void listenCallback(dialogflow_ros_msgs::DialogflowResult result);
+  void step();
+  bica_graph::StringEdge* edge_;
 private:
   ros::NodeHandle nh_;
+  dialogflow_ros_msgs::DialogflowResult result_;
   bica_graph::GraphClient graph_;
+  std::string intent_;
 };
+};  // namespace graph_dialog_extractor
 
-int main(int argc, char** argv)
-{
-  ros::init(argc, argv, "test_graph_extractor_dialog");
-  TestGraphDialogExtractor testGraphDialogExtractor;
-  return 0;
-}
+#endif

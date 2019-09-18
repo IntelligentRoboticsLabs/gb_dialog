@@ -48,6 +48,8 @@
 #include "graph_dialog_extractor/confirmOrderDF_lib.h"
 #include "graph_dialog_extractor/startDF_lib.h"
 #include "graph_dialog_extractor/orderDF_lib.h"
+#include "graph_dialog_extractor/helloDF_lib.h"
+#include "graph_dialog_extractor/byeDF_lib.h"
 
 #include <string>
 
@@ -64,7 +66,8 @@ public:
   graph_dialog_extractor::ConfirmOrderDF confirmOrderDF;
   graph_dialog_extractor::StartDF startDF;
   graph_dialog_extractor::OrderDF orderDF;
-
+  graph_dialog_extractor::HelloDF helloDF;
+  graph_dialog_extractor::HelloDF byeDF;
 
 private:
   ros::NodeHandle nh_;

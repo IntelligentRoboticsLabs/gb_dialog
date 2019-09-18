@@ -43,6 +43,8 @@
 #include <dialogflow_ros_msgs/DialogflowResult.h>
 #include <boost/algorithm/string/replace.hpp>
 #include <std_srvs/Empty.h>
+#include <std_msgs/Bool.h>
+#include <std_msgs/String.h>
 #include <sound_play/Talk.h>
 #include <regex>
 
@@ -72,6 +74,7 @@ private:
   std::string intent_, results_topic_, start_srv_;
   ros::ServiceClient talk_client_, sound_client_;
   ros::Subscriber df_result_sub_;
+  ros::Publisher listening_gui_, speak_gui_;
   std::regex intent_re_;
   ros::Time last_call_;
   void init();

@@ -54,15 +54,28 @@ void FloorDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
 
   ROS_INFO("[FloorDF] listenCallback: intent %s", result.intent.c_str());
   graph_.remove_edge(*edge_);
-  std::string floor_str;
+  std::string floor_str_raw, floor_str;
   for (int i = 0; i < result.parameters.size(); i++)
     for (int j = 0; j  <result.parameters[i].value.size(); j++)
     {
-      ROS_DEBUG("[GraphDialogExtractor] listenCallback: parameter %s value %s",
+      ROS_INFO("[GraphDialogExtractor] listenCallback: parameter %s value %s",
         result.parameters[i].param_name.c_str(),
         result.parameters[i].value[j].c_str());
-      floor_str = result.parameters[i].value[j];
+      if (result.parameters[i].value[j] != "")
+        floor_str_raw = result.parameters[i].value[j];
     }
+  floor_str = floor_str_raw;
+  if (floor_str_raw.find("1") != std::string::npos)
+    floor_str = "first";
+  else if(floor_str_raw.find("2") != std::string::npos)
+    floor_str = "second";
+  else if(floor_str_raw.find("3") != std::string::npos)
+    floor_str = "third";
+  else if(floor_str_raw.find("4") != std::string::npos)
+    floor_str = "fourth";
+  else if(floor_str_raw.find("5") != std::string::npos)
+    floor_str = "fifth";
+
   speak("I'm in the " + floor_str + " floor. Thank you");
   graph_.add_edge(edge_->get_target(), "response: " + floor_str , edge_->get_source());
   edge_ = NULL;

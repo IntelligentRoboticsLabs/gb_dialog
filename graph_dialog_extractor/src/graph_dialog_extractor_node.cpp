@@ -47,8 +47,9 @@ GraphDialogExtractor::GraphDialogExtractor():
   orderReadyDF("orderReady.ask"),
   confirmOrderDF("confirmOrder.ask"),
   startDF("bar_start.action"),
-  orderDF("bar_order.ask")
-
+  orderDF("bar_order.ask"),
+  helloDF("hello.action"),
+  byeDF("bye.action")
 {}
 
 std::string GraphDialogExtractor::saySplit(std::string str)
@@ -73,11 +74,14 @@ void GraphDialogExtractor::step()
       speak(say_splited_edge);
     }
   }
+  helloDF.step();
+  byeDF.step();
   floorDF.step();
   orderReadyDF.step();
   confirmOrderDF.step();
   startDF.step();
   orderDF.step();
+
 }
 }  // namespace graph_dialog_extractor
 
