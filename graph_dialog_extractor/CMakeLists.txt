@@ -59,6 +59,10 @@ add_library(bye_df_lib src/libs/byeDF_lib.cpp)
 add_dependencies(bye_df_lib ${catkin_EXPORTED_TARGETS})
 target_link_libraries(bye_df_lib ${catkin_LIBRARIES} gb_dialog)
 
+add_library(confirmation_df_lib src/libs/confirmationDF_lib.cpp)
+add_dependencies(confirmation_df_lib ${catkin_EXPORTED_TARGETS})
+target_link_libraries(confirmation_df_lib ${catkin_LIBRARIES} gb_dialog)
+
 add_executable(graph_dialog_extractor_node src/graph_dialog_extractor_node.cpp)
 add_dependencies(graph_dialog_extractor_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(graph_dialog_extractor_node
@@ -69,6 +73,7 @@ target_link_libraries(graph_dialog_extractor_node
   order_df_lib
   hello_df_lib
   bye_df_lib
+  confirmation_df_lib
   ${catkin_LIBRARIES})
 
 add_executable(test_graph_dialog_extractor src/test_graph_dialog_extractor.cpp)

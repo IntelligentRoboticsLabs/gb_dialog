@@ -69,7 +69,7 @@ void StartDF::step()
     {
       speak("I'm ready to start");
       edge_ = new bica_graph::StringEdge(*it);
-      ROS_INFO("[Ask] %s", edge.c_str());
+      ROS_INFO("[startDF Ask] %s", edge.c_str());
       listen();
     }
   }

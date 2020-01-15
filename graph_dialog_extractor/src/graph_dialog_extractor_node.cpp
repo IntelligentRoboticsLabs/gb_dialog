@@ -49,7 +49,8 @@ GraphDialogExtractor::GraphDialogExtractor():
   startDF("bar_start.action"),
   orderDF("bar_order.ask"),
   helloDF("hello.action"),
-  byeDF("bye.action")
+  byeDF("bye.action"),
+  confirmationDF("[[:print:]_]*.confirmation")
 {}
 
 std::string GraphDialogExtractor::saySplit(std::string str)
@@ -81,7 +82,7 @@ void GraphDialogExtractor::step()
   confirmOrderDF.step();
   startDF.step();
   orderDF.step();
-
+  confirmationDF.step();
 }
 }  // namespace graph_dialog_extractor
 

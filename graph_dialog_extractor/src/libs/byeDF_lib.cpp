@@ -68,7 +68,7 @@ void ByeDF::step()
     if (edge.find("ask: " + intent_) != std::string::npos)
     {
       edge_ = new bica_graph::StringEdge(*it);
-      ROS_INFO("[Ask] %s", edge.c_str());
+      ROS_INFO("[byeDF Ask] %s", edge.c_str());
       listen();
     }
   }

@@ -35,47 +35,49 @@
 /* Author: Jonatan Gines jginesclavero@gmail.com */
 
 /* Mantainer: Jonatan Gines jginesclavero@gmail.com */
-
-#ifndef GRAPHDIALOGEXTRACTOR_H_
-#define GRAPHDIALOGEXTRACTOR_H_
-
-#include <ros/ros.h>
-#include <ros/console.h>
-#include <gb_dialog/DialogInterface.h>
-#include "bica_graph/graph_client.h"
-#include "graph_dialog_extractor/floorDF_lib.h"
-#include "graph_dialog_extractor/orderReadyDF_lib.h"
-#include "graph_dialog_extractor/confirmOrderDF_lib.h"
-#include "graph_dialog_extractor/startDF_lib.h"
-#include "graph_dialog_extractor/orderDF_lib.h"
-#include "graph_dialog_extractor/helloDF_lib.h"
-#include "graph_dialog_extractor/byeDF_lib.h"
-#include "graph_dialog_extractor/confirmationDF_lib.h"
-
-
+#include <graph_dialog_extractor/confirmationDF_lib.h>
 #include <string>
+#include <list>
 
 namespace graph_dialog_extractor
 {
-class GraphDialogExtractor: public gb_dialog::DialogInterface
+ConfirmationDF::ConfirmationDF(std::string intent):
+  DialogInterface(intent), edge_()
 {
-public:
-  GraphDialogExtractor();
-  void step();
-  bica_graph::StringEdge* edge_;
-  graph_dialog_extractor::FloorDF floorDF;
-  graph_dialog_extractor::OrderReadyDF orderReadyDF;
-  graph_dialog_extractor::ConfirmOrderDF confirmOrderDF;
-  graph_dialog_extractor::StartDF startDF;
-  graph_dialog_extractor::OrderDF orderDF;
-  graph_dialog_extractor::HelloDF helloDF;
-  graph_dialog_extractor::ByeDF byeDF;
-  graph_dialog_extractor::ConfirmationDF confirmationDF;
+  intent_ = intent;
+}
 
-private:
-  ros::NodeHandle nh_;
-  bica_graph::GraphClient graph_;
-  std::string saySplit(std::string str);
-};
-}  // namespace graph_dialog_extractor
-#endif
+void ConfirmationDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
+{
+  if (edge_ == NULL)
+    return;
+
+  ROS_INFO("[ConfirmationDF] listenCallback: intent %s", result.intent.c_str());
+  graph_.remove_edge(*edge_);
+  if (result.intent == "positive.confirmation")
+  {
+    graph_.add_edge(edge_->get_target(), "response: yes" , edge_->get_source());
+  }
+  else if (result.intent == "negative.confirmation")
+  {
+    graph_.add_edge(edge_->get_target(), "response: no" , edge_->get_source());
+  }
+  edge_ = NULL;
+}
+
+void ConfirmationDF::step()
+{
+  std::list<bica_graph::StringEdge> edges_list =  graph_.get_string_edges();
+  for (auto it = edges_list.begin(); it != edges_list.end(); ++it)
+  {
+    std::string edge = it->get();
+    if (edge.find("ask: order.confirmation") != std::string::npos)
+    {
+      edge_ = new bica_graph::StringEdge(*it);
+      ROS_INFO("[confirmationDF Ask] %s", edge.c_str());
+      listen();
+    }
+  }
+}
+
+};  // namespace graph_dialog_extractor

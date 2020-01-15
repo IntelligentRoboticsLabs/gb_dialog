@@ -75,6 +75,14 @@ void FloorDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
     floor_str = "fourth";
   else if(floor_str_raw.find("5") != std::string::npos)
     floor_str = "fifth";
+  else if(floor_str_raw.find("6") != std::string::npos)
+    floor_str = "sixth";
+  else if(floor_str_raw.find("7") != std::string::npos)
+    floor_str = "seventh";
+  else if(floor_str_raw.find("8") != std::string::npos)
+    floor_str = "eigth";
+  else if(floor_str_raw.find("9") != std::string::npos)
+    floor_str = "ninth";
 
   speak("I'm in the " + floor_str + " floor. Thank you");
   graph_.add_edge(edge_->get_target(), "response: " + floor_str , edge_->get_source());
@@ -91,7 +99,7 @@ void FloorDF::step()
     {
       speak("Hello, What is this floor?");
       edge_ = new bica_graph::StringEdge(*it);
-      ROS_INFO("[Ask] %s", edge.c_str());
+      ROS_INFO("[floorDF Ask] %s", edge.c_str());
       listen();
     }
   }

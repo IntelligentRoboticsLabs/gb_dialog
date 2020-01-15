@@ -82,7 +82,7 @@ void OrderDF::listenCallback(dialogflow_ros_msgs::DialogflowResult result)
       }
     }
 
-    speak("You have ordered " + total_items);
+    // speak("You have ordered " + total_items);
     graph_.add_edge(edge_->get_target(), "response: " + total_items, edge_->get_source());
     edge_ = NULL;
   }
@@ -98,7 +98,7 @@ void OrderDF::step()
     {
       speak("What are you going to take?");
       edge_ = new bica_graph::StringEdge(*it);
-      ROS_INFO("[Ask] %s", edge.c_str());
+      ROS_INFO("[orderDF Ask] %s", edge.c_str());
       listen();
     }
   }
