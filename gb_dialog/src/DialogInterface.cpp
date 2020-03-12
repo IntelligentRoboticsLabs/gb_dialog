@@ -1,7 +1,7 @@
 /*********************************************************************
 *  Software License Agreement (BSD License)
 *
-*   Copyright (c) 2018, Intelligent Robotics
+*   Copyright (c) 2018, Intelligent Robotics Lab
 *   All rights reserved.
 *
 *   Redistribution and use in source and binary forms, with or without
@@ -32,20 +32,16 @@
 *   POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-/* Author: Jonatan Gines jginesclavero@gmail.com */
+/* Author: Jonatan Gines jonatan.gines@urjc.es */
 
-/* Mantainer: Jonatan Gines jginesclavero@gmail.com */
+/* Mantainer: Jonatan Gines jonatan.gines@urjc.es */
 #include <gb_dialog/DialogInterface.h>
 
 #include <string>
+#include <utility>
 
 namespace gb_dialog
 {
-DialogInterface::DialogInterface(std::string intent) :
-  intent_(intent), nh_()
-{
-  init();
-}
 
 DialogInterface::DialogInterface() : nh_()
 {
@@ -60,47 +56,42 @@ void DialogInterface::init()
     start_srv_ = "/dialogflow_client/start";
 
   df_result_sub_ = nh_.subscribe(results_topic_, 1, &DialogInterface::dfCallback, this);
-  talk_client_ = nh_.serviceClient<sound_play::Talk>("/gb_dialog/talk");
+  talk_client_ = nh_.serviceClient<sound_play::Talk>("/dialog/talk");
   listening_gui_ = nh_.advertise<std_msgs::Bool>("/dialog_gui/is_listening", 1);
   speak_gui_ = nh_.advertise<std_msgs::String>("/dialog_gui/talk", 1);
 
-  idle_ = true;
-  setCallTime(ros::Time::now());
   std_msgs::String str_msg;
   std_msgs::Bool bool_msg;
   str_msg.data = "";
   speak_gui_.publish(str_msg);
   bool_msg.data = false;
   listening_gui_.publish(bool_msg);
-
 }
 
-void DialogInterface::setIntent(std::string intent)
+void DialogInterface::registerCallback(
+  std::function<void(const DialogflowResult & result)> cb,
+  std::string intent)
 {
-  intent_ = intent;
+  registered_cbs_.insert(
+    std::pair<std::string, std::function<void(const DialogflowResult & result)>>
+    (intent, cb));
 }
 
-std::string DialogInterface::getIntent()
+void DialogInterface::dfCallback(const DialogflowResult::ConstPtr& result)
 {
-  return intent_;
-}
-
-std::regex DialogInterface::getIntentRegex()
-{
-  std::regex intent_re_(intent_);
-  return intent_re_;
-}
-
-void DialogInterface::dfCallback(const dialogflow_ros_msgs::DialogflowResult::ConstPtr& result)
-{
-  std::regex intent_re_(intent_);
-  if (std::regex_match(result->intent, intent_re_) && result->intent.size() > 0)
+  if (result->intent.size() > 0)
   {
-    setCallTime(ros::Time::now());
-    listenCallback(*result);
-    std_msgs::Bool msg;
-    msg.data = false;
-    listening_gui_.publish(msg);
+    for (auto item : registered_cbs_)
+    {
+      std::regex intent_re = std::regex(item.first);
+      if (std::regex_match(result->intent, intent_re))
+      {
+        item.second(*result);
+      }
+    }
+    auto bool_msg = std_msgs::Bool();
+    bool_msg.data = false;
+    listening_gui_.publish(bool_msg);
   }
 }
 
@@ -117,38 +108,14 @@ bool DialogInterface::speak(std::string str)
 
 bool DialogInterface::listen()
 {
-  if (getCallTime() + ros::Duration(0.2) < ros::Time::now() )
-  {
-    std_srvs::Empty srv;
-    std_msgs::Bool msg;
-    msg.data = true;
-    listening_gui_.publish(msg);
-    ROS_INFO("[DialogInterface] listening...");
-    ros::ServiceClient df_srv = nh_.serviceClient<std_srvs::Empty>(start_srv_, 1);
-    df_srv.call(srv);
-    return true;
-  }
-  return false;
-}
-
-void DialogInterface::setIdleState(bool state)
-{
-  idle_ = state;
-}
-
-bool DialogInterface::isIdle()
-{
-  return idle_;
-}
-
-void DialogInterface::setCallTime(ros::Time t)
-{
-  last_call_ = t;
-}
-
-ros::Time DialogInterface::getCallTime()
-{
-  return last_call_;
+  std_srvs::Empty srv;
+  std_msgs::Bool msg;
+  msg.data = true;
+  listening_gui_.publish(msg);
+  ROS_INFO("[DialogInterface] listening...");
+  ros::ServiceClient df_srv = nh_.serviceClient<std_srvs::Empty>(start_srv_, 1);
+  df_srv.call(srv);
+  return true;
 }
 
 };  // namespace gb_dialog

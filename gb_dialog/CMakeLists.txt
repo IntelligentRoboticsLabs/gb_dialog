@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(gb_dialog)
 
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -51,14 +51,3 @@ install(DIRECTORY include/${PROJECT_NAME}/
 install(DIRECTORY launch/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch/
 )
-
-if(CATKIN_ENABLE_TESTING)
-  find_package(rostest REQUIRED)
-
-  add_rostest_gtest(${PROJECT_NAME}-test test/test_DialogInterface.launch test/test_DialogInterface.cpp)
-  target_link_libraries(
-    ${PROJECT_NAME}-test
-    ${catkin_LIBRARIES}
-    gb_dialog
-  )
-endif()
