@@ -55,12 +55,12 @@ class ExampleDF: public DialogInterface
 
     void noIntentCB(dialogflow_ros_msgs::DialogflowResult result)
     {
-      ROS_INFO("[ExampleDF] noIntentCB: intent %s", result.intent.c_str());
+      ROS_INFO("[ExampleDF] noIntentCB: intent [%s]", result.intent.c_str());
     }
 
     void welcomeIntentCB(dialogflow_ros_msgs::DialogflowResult result)
     {
-      ROS_INFO("[ExampleDF] welcomeIntentCB: intent %s", result.intent.c_str());
+      ROS_INFO("[ExampleDF] welcomeIntentCB: intent [%s]", result.intent.c_str());
       speak(result.fulfillment_text);
     }
 

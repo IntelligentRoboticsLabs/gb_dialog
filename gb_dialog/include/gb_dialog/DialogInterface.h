@@ -63,7 +63,7 @@ public:
   virtual void listenCallback(DialogflowResult result){}
   void registerCallback(
     std::function<void(const DialogflowResult & result)> cb,
-    std::string intent = "[[:print:]_]*.[[:print:]_]*");
+    std::string intent = "(.*)");
 
 private:
   bool idle_;
