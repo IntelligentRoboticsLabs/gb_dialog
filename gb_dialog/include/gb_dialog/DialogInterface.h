@@ -47,37 +47,38 @@
 #include <std_msgs/String.h>
 #include <sound_play/Talk.h>
 #include <regex>
+#include <map>
 
 namespace gb_dialog
 {
 class DialogInterface
 {
 public:
-  explicit DialogInterface(std::string intent);
+  using DialogflowResult = dialogflow_ros_msgs::DialogflowResult;
+
   DialogInterface();
 
-  void dfCallback(const dialogflow_ros_msgs::DialogflowResult::ConstPtr& result);
   bool speak(std::string str);
   bool listen();
-  virtual void listenCallback(dialogflow_ros_msgs::DialogflowResult result){}
-  std::string getIntent();
-  std::regex getIntentRegex();
-  void setIntent(std::string intent);
-  void setIdleState(bool state);
-  bool isIdle();
-  void setCallTime(ros::Time t);
-  ros::Time getCallTime();
+  virtual void listenCallback(DialogflowResult result){}
+  void registerCallback(
+    std::function<void(const DialogflowResult & result)> cb,
+    std::string intent = "[[:print:]_]*.[[:print:]_]*");
 
 private:
   bool idle_;
   ros::NodeHandle nh_;
-  std::string intent_, results_topic_, start_srv_;
+  std::string results_topic_, start_srv_;
   ros::ServiceClient talk_client_, sound_client_;
   ros::Subscriber df_result_sub_;
   ros::Publisher listening_gui_, speak_gui_;
   std::regex intent_re_;
-  ros::Time last_call_;
+
+  std::map<std::string, std::function<void(const DialogflowResult & result)>> registered_cbs_;
+
+
   void init();
+  void dfCallback(const DialogflowResult::ConstPtr& result);
 };
 };  // namespace gb_dialog
 

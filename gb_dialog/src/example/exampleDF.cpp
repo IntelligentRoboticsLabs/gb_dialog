@@ -36,42 +36,49 @@
 
 /* Mantainer: Jonatan Gines jginesclavero@gmail.com */
 #include <gb_dialog/DialogInterface.h>
-#include <std_msgs/Empty.h>
 #include <string>
+
+namespace ph = std::placeholders;
 
 namespace gb_dialog
 {
-class ForwarderDF: public gb_dialog::DialogInterface
+class ExampleDF: public DialogInterface
 {
   public:
-    explicit ForwarderDF(std::string intent): nh_(), DialogInterface(intent)
+    ExampleDF(): nh_()
     {
-      trigger_sub_ = nh_.subscribe("/listen", 1, &ForwarderDF::triggerCallback, this);
+      this->registerCallback(std::bind(&ExampleDF::noIntentCB, this, ph::_1));
+      this->registerCallback(
+        std::bind(&ExampleDF::welcomeIntentCB, this, ph::_1),
+        "Default Welcome Intent");
     }
 
-    void listenCallback(dialogflow_ros_msgs::DialogflowResult result)
+    void noIntentCB(dialogflow_ros_msgs::DialogflowResult result)
     {
-      ROS_INFO("[ForwarderDF] listenCallback: intent %s", result.intent.c_str());
-      result_ = result;
-      speak(result_.fulfillment_text);
+      ROS_INFO("[ExampleDF] noIntentCB: intent %s", result.intent.c_str());
     }
 
-    void triggerCallback(const std_msgs::Empty::ConstPtr& msg)
+    void welcomeIntentCB(dialogflow_ros_msgs::DialogflowResult result)
+    {
+      ROS_INFO("[ExampleDF] welcomeIntentCB: intent %s", result.intent.c_str());
+      speak(result.fulfillment_text);
+    }
+
+    void step()
     {
       listen();
     }
 
   private:
     ros::NodeHandle nh_;
-    ros::Subscriber trigger_sub_;
-    dialogflow_ros_msgs::DialogflowResult result_;
 };
 }  // namespace gb_dialog
 
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "example_df_node");
-  gb_dialog::ForwarderDF forwarder("[[:print:]_]*.info");
+  gb_dialog::ExampleDF forwarder;
+  forwarder.step();
   ros::spin();
   return 0;
 }
