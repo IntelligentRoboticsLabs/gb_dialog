@@ -53,5 +53,5 @@ Compile and execute the test
 
 ```
 roslaunch gb_dialog gb_dialog_services_soundplay.launch
-rosrun gb_dialog exampleDF.cpp
+rosrun gb_dialog example_df_node
 ```
