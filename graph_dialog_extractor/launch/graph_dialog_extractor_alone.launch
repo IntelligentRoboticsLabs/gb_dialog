@@ -1,9 +1,0 @@
-<launch>
-  <node pkg="graph_dialog_extractor" type="graph_dialog_extractor_node" name="graph_dialog_extractor_node" output="screen"/>
-  <include file="$(find bica_graph)/launch/bica_graph_master.launch"/>
-
-  <include file="$(find gb_dialog)/launch/gb_dialog_services_soundplay.launch">
-    <arg name="google_application_credentials" value="$(env HOME)/df_sciroc_api.json"/>
-    <arg name="config_file" value="$(find sciroc)/config/df_params.yaml"/>
-  </include>
-</launch>
