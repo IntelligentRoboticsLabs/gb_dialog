@@ -1,3 +1,0 @@
-<launch>
-    <include file="$(find dialogflow_ros)/launch/dialogflow.launch" />
-</launch>
