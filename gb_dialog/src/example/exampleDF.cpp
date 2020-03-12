@@ -1,7 +1,7 @@
 /*********************************************************************
 *  Software License Agreement (BSD License)
 *
-*   Copyright (c) 2018, Intelligent Robotics
+*   Copyright (c) 2018, Intelligent Robotics Labs
 *   All rights reserved.
 *
 *   Redistribution and use in source and binary forms, with or without
@@ -64,11 +64,6 @@ class ExampleDF: public DialogInterface
       speak(result.fulfillment_text);
     }
 
-    void step()
-    {
-      listen();
-    }
-
   private:
     ros::NodeHandle nh_;
 };
@@ -78,7 +73,7 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "example_df_node");
   gb_dialog::ExampleDF forwarder;
-  forwarder.step();
+  forwarder.listen();
   ros::spin();
   return 0;
 }
