@@ -6,7 +6,7 @@ GB-dialog contains the library DialogInterface from which we will inherit to dev
 ## Installing
 If you don't have vcs tool, install it with ```sudo apt-get install python3-vcstool ```  
 Import dependencies with ``` vcs import < gb_dialog_requirements.repos ```  
-Install python requirements of dialogflow_ros [README](https://github.com/jginesclavero/dialogflow_ros/tree/master/dialogflow_ros)  
+Install python requirements of dialogflow_ros and **follow the setup steps** --> [README](https://github.com/jginesclavero/dialogflow_ros/tree/master/dialogflow_ros)  
 
 ### Creating a virtualenv for install Python modules
 If you have dependencies issues when you installed the above requirements  
