@@ -57,8 +57,8 @@ void DialogInterface::init()
 
   df_result_sub_ = nh_.subscribe(results_topic_, 1, &DialogInterface::dfCallback, this);
   talk_client_ = nh_.serviceClient<sound_play::Talk>("/dialog/talk");
-  listening_gui_ = nh_.advertise<std_msgs::Bool>("/dialog_gui/is_listening", 1);
-  speak_gui_ = nh_.advertise<std_msgs::String>("/dialog_gui/talk", 1);
+  listening_gui_ = nh_.advertise<std_msgs::Bool>("/dialog_gui/is_listening", 1, true);
+  speak_gui_ = nh_.advertise<std_msgs::String>("/dialog_gui/talk", 1, true);
 
   std_msgs::String str_msg;
   std_msgs::Bool bool_msg;
@@ -78,7 +78,11 @@ void DialogInterface::registerCallback(
 }
 
 void DialogInterface::dfCallback(const DialogflowResult::ConstPtr& result)
-{
+{ 
+  auto bool_msg = std_msgs::Bool();
+  bool_msg.data = false;
+  listening_gui_.publish(bool_msg);
+
   if (result->intent.size() > 0)
   {
     for (auto item : registered_cbs_)
@@ -86,12 +90,10 @@ void DialogInterface::dfCallback(const DialogflowResult::ConstPtr& result)
       std::regex intent_re = std::regex(item.first);
       if (std::regex_match(result->intent, intent_re))
       {
+        
         item.second(*result);
       }
     }
-    auto bool_msg = std_msgs::Bool();
-    bool_msg.data = false;
-    listening_gui_.publish(bool_msg);
   }
 }
 
