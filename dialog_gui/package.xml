@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="1">
+  <name>dialog_gui</name>
+  <version>0.0.1</version>
+  <description>The dialog_gui package.</description>
+  <maintainer email="jginesclavero@gmail.com">Jonatan Gines Clavero</maintainer>
+  <license>BSD</license>
+  <author email="jginesclavero@gmail.com">Jonatan Gines Clavero</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>rosbridge_server</run_depend>
+  
+  <export>
+  </export>
+</package>
