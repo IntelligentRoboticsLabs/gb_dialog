@@ -18,7 +18,7 @@ Install the dependencies ``` pip install -r [__gb_dialog_Path__]/dialogflow_ros/
 
 ## Use
 
-Below is an example of using the GB-dialog library ([example file](https://github.com/IntelligentRoboticsLabs/gb_dialog/blob/no-bica-dev/gb_dialog/src/example/exampleDF.cpp)).
+Below is an example of using the GB-dialog library ([example file](https://github.com/IntelligentRoboticsLabs/gb_dialog/blob/master/gb_dialog/src/example/exampleDF.cpp)).
 First of all we define our new class that inherits from DialogInterface.
 Then, I must use the function ```registerCallback``` to define the handler of the DialogFlow response. You can indicate a specific intent on each callback to receive the DialogFlow responses in differents callbacks, or not to receive all results from DialogFlow in the same callback, up to you!
 
