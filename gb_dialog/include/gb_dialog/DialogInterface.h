@@ -45,7 +45,7 @@
 #include <std_srvs/Empty.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/String.h>
-#include <sound_play/Talk.h>
+#include <sound_play/sound_play.h>
 #include <regex>
 #include <map>
 
@@ -69,13 +69,14 @@ private:
   bool idle_;
   ros::NodeHandle nh_;
   std::string results_topic_, start_srv_;
-  ros::ServiceClient talk_client_, sound_client_;
+  ros::ServiceClient sound_client_;
   ros::Subscriber df_result_sub_;
   ros::Publisher listening_gui_, speak_gui_;
   std::regex intent_re_;
 
   std::map<std::string, std::function<void(const DialogflowResult & result)>> registered_cbs_;
 
+  sound_play::SoundClient sc_;
 
   void init();
   void dfCallback(const DialogflowResult::ConstPtr& result);

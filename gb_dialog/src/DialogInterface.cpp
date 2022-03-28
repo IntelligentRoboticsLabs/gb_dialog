@@ -43,7 +43,9 @@
 namespace gb_dialog
 {
 
-DialogInterface::DialogInterface() : nh_()
+DialogInterface::DialogInterface()
+: nh_(),
+  sc_(nh_, "/robotsound")
 {
   init();
 }
@@ -56,7 +58,6 @@ void DialogInterface::init()
     start_srv_ = "/dialogflow_client/start";
 
   df_result_sub_ = nh_.subscribe(results_topic_, 1, &DialogInterface::dfCallback, this);
-  talk_client_ = nh_.serviceClient<sound_play::Talk>("/dialog/talk");
   listening_gui_ = nh_.advertise<std_msgs::Bool>("/dialog_gui/is_listening", 1, true);
   speak_gui_ = nh_.advertise<std_msgs::String>("/dialog_gui/talk", 1, true);
 
@@ -103,9 +104,8 @@ bool DialogInterface::speak(std::string str)
   std_msgs::String msg;
   msg.data = str;
   speak_gui_.publish(msg);
-  sound_play::Talk srv;
-  srv.request.str = str;
-  talk_client_.call(srv);
+
+  sc_.say(str);
 }
 
 bool DialogInterface::listen()

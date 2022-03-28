@@ -32,7 +32,7 @@ roslint_cpp()
 add_library(gb_dialog
 	src/DialogInterface.cpp
 )
-add_dependencies(gb_dialog ${catkin_EXPORTED_TARGETS})
+add_dependencies(gb_dialog ${catkin_EXPORTED_TARGETS} sound_play_generate_messages_cpp)
 target_link_libraries(gb_dialog ${catkin_LIBRARIES})
 
 
