@@ -31,7 +31,7 @@ Original instructions are in this [README](https://github.com/jginesclavero/dial
 #### Install the requirements for dialogflow_ros:
 
 ```
-sudo apt-get install portaudio19-dev ros-melodic-rosbridge-server
+sudo apt-get install portaudio19-dev ros-noetic-rosbridge-server
 roscd dialogflow_ros
 pip install -r requirements.txt
 ```
