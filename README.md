@@ -43,14 +43,11 @@ pip install -r requirements.txt
 3. Go to [DialogFlow Console](https://dialogflow.cloud.google.com/) and create a New Agent.
 4. Select the project and click on Create button.
 5. Go to [Google Cloud Console](https://console.cloud.google.com/) again.
-6. IAM and administration -> IAM and select the agent you just created.
-7. Add roles:
-  1. Project -> Propietary.
-  2. DialogFlow -> All of them (one role for each one)
-8. IAM and administration -> Service Accounts
-9. In the service agent -> actions -> create a key (JSON)
-6. Download the JSON File. Rename and move it t your HOME as ~/df_api.json
-9. Edit `dialogflow_ros/config/param.yaml` and write down your project id. You can find it in the [DialogFlow Console](https://dialogflow.cloud.google.com/), clicking in the gear icon.
+6. Following the [Kick Setup](https://cloud.google.com/dialogflow/es/docs/quick/setup):
+  1. Enable API
+  2. Create Service Account and download private keys as JSON
+7. Download the JSON File. Rename and move it t your HOME as ~/df_api.json
+8. Edit `dialogflow_ros/config/param.yaml` and write down your project id. You can find it in the [DialogFlow Console](https://dialogflow.cloud.google.com/), clicking in the gear icon.
 
 ## Use
 
