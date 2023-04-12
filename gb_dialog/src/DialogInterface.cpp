@@ -1,7 +1,7 @@
 /*********************************************************************
 *  Software License Agreement (BSD License)
 *
-*   Copyright (c) 2018, Intelligent Robotics Lab
+*   Copyright (c) 2023, Intelligent Robotics Lab
 *   All rights reserved.
 *
 *   Redistribution and use in source and binary forms, with or without
@@ -33,40 +33,44 @@
 *********************************************************************/
 
 /* Author: Jonatan Gines jonatan.gines@urjc.es */
+/* Modified: Juan Carlos Manzanares juancarlos.serrano@urjc.es */
 
 /* Mantainer: Jonatan Gines jonatan.gines@urjc.es */
-#include <gb_dialog/DialogInterface.h>
+#include "gb_dialog/DialogInterface.hpp"
 
 #include <string>
 #include <utility>
+
+using namespace std::placeholders;  
 
 namespace gb_dialog
 {
 
 DialogInterface::DialogInterface()
-: nh_(),
-  sc_(nh_, "/robotsound")
+: Node("dialog_interface")
+  sc_(this, "/robotsound")
 {
   init();
 }
 
 void DialogInterface::init()
 {
-  if (!nh_.getParam("/dialogflow_client/results_topic", results_topic_))
-    results_topic_ = "/dialogflow_client/results";
-  if (!nh_.getParam("/dialogflow_client/start_srv", start_srv_))
-    start_srv_ = "/dialogflow_client/start";
+  results_topic_ = "/dialogflow_client/results";
+  start_srv_ = "/dialogflow_client/start";
 
-  df_result_sub_ = nh_.subscribe(results_topic_, 1, &DialogInterface::dfCallback, this);
-  listening_gui_ = nh_.advertise<std_msgs::Bool>("/dialog_gui/is_listening", 1, true);
-  speak_gui_ = nh_.advertise<std_msgs::String>("/dialog_gui/talk", 1, true);
+  df_result_sub_ = create_subscription<DialogflowResult>(
+      "results_topic_", 1,
+      std::bind(&DialogInterface::dfCallback, this, _1));
 
-  std_msgs::String str_msg;
-  std_msgs::Bool bool_msg;
+  listening_gui_ = this->create_publisher<std_msgs::msg::Bool>("/dialog_gui/is_listening", 1);
+  speak_gui_ = this->create_publisher<std_msgs::msg::String>("/dialog_gui/talk", 1);
+
+  std_msgs::msg::String str_msg;
+  std_msgs::msg::Bool bool_msg;
   str_msg.data = "";
-  speak_gui_.publish(str_msg);
+  speak_gui_->publish(str_msg);
   bool_msg.data = false;
-  listening_gui_.publish(bool_msg);
+  listening_gui_->publish(bool_msg);
 }
 
 void DialogInterface::registerCallback(
@@ -80,9 +84,9 @@ void DialogInterface::registerCallback(
 
 void DialogInterface::dfCallback(const DialogflowResult::ConstPtr& result)
 { 
-  auto bool_msg = std_msgs::Bool();
+  auto bool_msg = std_msgs::msg::Bool();
   bool_msg.data = false;
-  listening_gui_.publish(bool_msg);
+  listening_gui_->publish(bool_msg);
 
   if (result->intent.size() > 0)
   {
@@ -101,22 +105,27 @@ void DialogInterface::dfCallback(const DialogflowResult::ConstPtr& result)
 bool DialogInterface::speak(std::string str)
 {
   boost::replace_all(str, "_", " ");
-  std_msgs::String msg;
+  std_msgs::msg::String msg;
   msg.data = str;
-  speak_gui_.publish(msg);
+  speak_gui_->publish(msg);
 
   sc_.say(str);
+
+  return true;
 }
 
 bool DialogInterface::listen()
 {
-  std_srvs::Empty srv;
-  std_msgs::Bool msg;
+  std_msgs::msg::Bool msg;
   msg.data = true;
-  listening_gui_.publish(msg);
-  ROS_INFO("[DialogInterface] listening...");
-  ros::ServiceClient df_srv = nh_.serviceClient<std_srvs::Empty>(start_srv_, 1);
-  df_srv.call(srv);
+  listening_gui_->publish(msg);
+  RCLCPP_INFO(get_logger(), "[DialogInterface] listening...");
+
+  auto request = std::make_shared<std_srvs::srv::Empty::Request>();
+  auto df_srv = create_client<std_srvs::srv::Empty>(start_srv_);
+  auto future = df_srv->async_send_request(request);
+  auto response = future.get();
+
   return true;
 }
 

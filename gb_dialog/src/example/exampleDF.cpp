@@ -1,7 +1,7 @@
 /*********************************************************************
 *  Software License Agreement (BSD License)
 *
-*   Copyright (c) 2018, Intelligent Robotics Labs
+*   Copyright (c) 2023, Intelligent Robotics Lab
 *   All rights reserved.
 *
 *   Redistribution and use in source and binary forms, with or without
@@ -32,20 +32,24 @@
 *   POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-/* Author: Jonatan Gines jginesclavero@gmail.com */
+/* Author: Jonatan Gines jonatan.gines@urjc.es */
+/* Modified: Juan Carlos Manzanares juancarlos.serrano@urjc.es */
 
-/* Mantainer: Jonatan Gines jginesclavero@gmail.com */
-#include <gb_dialog/DialogInterface.h>
+/* Mantainer: Jonatan Gines jonatan.gines@urjc.es */
+#include "gb_dialog/DialogInterface.hpp"
+#include "rclcpp/rclcpp.hpp"
 #include <string>
 
+using namespace std::placeholders;  
 namespace ph = std::placeholders;
 
 namespace gb_dialog
 {
+
 class ExampleDF: public DialogInterface
 {
   public:
-    ExampleDF(): nh_()
+    ExampleDF()
     {
       this->registerCallback(std::bind(&ExampleDF::noIntentCB, this, ph::_1));
       this->registerCallback(
@@ -53,27 +57,29 @@ class ExampleDF: public DialogInterface
         "Default Welcome Intent");
     }
 
-    void noIntentCB(dialogflow_ros_msgs::DialogflowResult result)
+    void noIntentCB(dialogflow_ros2_interfaces::msg::DialogflowResult result)
     {
-      ROS_INFO("[ExampleDF] noIntentCB: intent [%s]", result.intent.c_str());
+      RCLCPP_INFO(this->get_logger(), "[ExampleDF] noIntentCB: intent [%s]", result.intent.c_str());
     }
 
-    void welcomeIntentCB(dialogflow_ros_msgs::DialogflowResult result)
+    void welcomeIntentCB(dialogflow_ros2_interfaces::msg::DialogflowResult result)
     {
-      ROS_INFO("[ExampleDF] welcomeIntentCB: intent [%s]", result.intent.c_str());
+      RCLCPP_INFO(this->get_logger(), "[ExampleDF] welcomeIntentCB: intent [%s]", result.intent.c_str());
       speak(result.fulfillment_text);
     }
 
   private:
-    ros::NodeHandle nh_;
 };
 }  // namespace gb_dialog
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "example_df_node");
-  gb_dialog::ExampleDF forwarder;
-  forwarder.listen();
-  ros::spin();
+  rclcpp::init(argc, argv);
+  auto forwarder = std::make_shared<gb_dialog::ExampleDF>();
+  forwarder->listen();
+  rclcpp::executors::SingleThreadedExecutor executor;
+  executor.add_node(forwarder);
+  executor.spin();
+
   return 0;
 }

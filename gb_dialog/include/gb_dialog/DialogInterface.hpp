@@ -1,7 +1,7 @@
 /*********************************************************************
 *  Software License Agreement (BSD License)
 *
-*   Copyright (c) 2018, Intelligent Robotics
+*   Copyright (c) 2023, Intelligent Robotics Lab
 *   All rights reserved.
 *
 *   Redistribution and use in source and binary forms, with or without
@@ -32,29 +32,29 @@
 *   POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-/* Author: Jonatan Gines jginesclavero@gmail.com */
+/* Author: Jonatan Gines jonatan.gines@urjc.es */
+/* Modified: Juan Carlos Manzanares juancarlos.serrano@urjc.es */
 
-/* Mantainer: Jonatan Gines jginesclavero@gmail.com */
-#ifndef DIALOGINTERFACE__H
-#define DIALOGINTERFACE__H
+/* Mantainer: Jonatan Gines jonatan.gines@urjc.es */
+#ifndef GB_DIALOG__DIALOGINTERFACE__HPP
+#define GB_DIALOG__DIALOGINTERFACE__HPP
 
-#include <ros/ros.h>
+#include "rclcpp/rclcpp.hpp"
 #include <string>
-#include <dialogflow_ros_msgs/DialogflowResult.h>
+#include <dialogflow_ros2_interfaces/msg/dialogflow_result.hpp>
 #include <boost/algorithm/string/replace.hpp>
-#include <std_srvs/Empty.h>
-#include <std_msgs/Bool.h>
-#include <std_msgs/String.h>
-#include <sound_play/sound_play.h>
+#include <std_srvs/srv/empty.hpp>
+#include <std_msgs/msg/bool.hpp>
+#include <std_msgs/msg/string.hpp>
 #include <regex>
 #include <map>
 
 namespace gb_dialog
 {
-class DialogInterface
+class DialogInterface : public rclcpp::Node
 {
 public:
-  using DialogflowResult = dialogflow_ros_msgs::DialogflowResult;
+  using DialogflowResult = dialogflow_ros2_interfaces::msg::DialogflowResult;
 
   DialogInterface();
 
@@ -67,11 +67,10 @@ public:
 
 private:
   bool idle_;
-  ros::NodeHandle nh_;
   std::string results_topic_, start_srv_;
-  ros::ServiceClient sound_client_;
-  ros::Subscriber df_result_sub_;
-  ros::Publisher listening_gui_, speak_gui_;
+  rclcpp::Subscription<DialogflowResult>::SharedPtr df_result_sub_;
+  rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr listening_gui_;
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr speak_gui_;
   std::regex intent_re_;
 
   std::map<std::string, std::function<void(const DialogflowResult & result)>> registered_cbs_;
@@ -83,4 +82,4 @@ private:
 };
 };  // namespace gb_dialog
 
-#endif
+#endif  // DIALOGINTERFACE__HPP

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package format="1">
+<package format="3">
   <name>gb_dialog</name>
   <version>0.0.1</version>
   <description>The gb_dialog package. Interface to helping in the dialog process using Google Speech and DialogFlow</description>
@@ -7,24 +7,22 @@
   <license>BSD</license>
   <author email="jginesclavero@gmail.com">Jonatan Gines Clavero</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>actionlib</depend>
+  <depend>sound_play</depend>
+
   <build_depend>std_msgs</build_depend>
-  <build_depend>roscpp</build_depend>
-  <build_depend>dialogflow_ros_msgs</build_depend>
+  <build_depend>rclcpp</build_depend>
+  <build_depend>dialogflow_ros_interfaces</build_depend>
   <build_depend>roslint</build_depend>
-  <build_depend>sound_play</build_depend>
-  <build_depend>actionlib_msgs</build_depend>
-  <build_depend>message_generation</build_depend>
 
-  <run_depend>roscpp</run_depend>
-  <run_depend>std_msgs</run_depend>
-  <run_depend>dialogflow_ros_msgs</run_depend>
-  <run_depend>sound_play</run_depend>
-  <run_depend>actionlib_msgs</run_depend>
-  <run_depend>message_runtime</run_depend>
-
+  <exec_depend>ros2run</exec_depend>
+  <exec_depend>rclcpp</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>dialogflow_ros_interfaces</exec_depend>
 
   <export>
-
+    <build_type>ament_cmake</build_type>
   </export>
 </package>

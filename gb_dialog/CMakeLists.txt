@@ -1,53 +1,47 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(gb_dialog)
 
-add_compile_options(-std=c++17)
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(dialogflow_ros2_interfaces REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
+find_package(sound_play REQUIRED)
 
-find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  dialogflow_ros_msgs
-  roslint
-  std_srvs
-  std_msgs
-  sound_play
-  actionlib
-  actionlib_msgs
+set(dependencies
+    rclcpp
+    dialogflow_ros2_interfaces
+    std_msgs
+    std_srvs
+    sound_play
 )
 
-catkin_package(
-	INCLUDE_DIRS include
-	LIBRARIES gb_dialog
-	CATKIN_DEPENDS roscpp dialogflow_ros_msgs actionlib_msgs
-	DEPENDS
+add_library(gb_dialog SHARED
+  src/DialogInterface.cpp
 )
 
-include_directories(
-  include
-  ${catkin_INCLUDE_DIRS}
-)
-
-set(ROSLINT_CPP_OPTS "--filter=-build/header_guard,-runtime/references,-whitespace/braces,-build/c++11")
-roslint_cpp()
-
-add_library(gb_dialog
-	src/DialogInterface.cpp
-)
-add_dependencies(gb_dialog ${catkin_EXPORTED_TARGETS} sound_play_generate_messages_cpp)
-target_link_libraries(gb_dialog ${catkin_LIBRARIES})
-
+ament_target_dependencies(gb_dialog ${dependencies})
+ament_export_libraries(gb_dialog)
 
 add_executable(example_df_node src/example/exampleDF.cpp)
-add_dependencies(example_df_node ${catkin_EXPORTED_TARGETS} )
-target_link_libraries(example_df_node ${catkin_LIBRARIES} gb_dialog)
+ament_target_dependencies(example_df_node ${dependencies})
 
-install(TARGETS gb_dialog
-        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
+include_directories(include)
 
-install(DIRECTORY include/${PROJECT_NAME}/
-        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
-
-install(DIRECTORY launch/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch/
+install(TARGETS
+  gb_dialog
+  example_df_node
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
+
+install(DIRECTORY include DESTINATION share/${PROJECT_NAME})
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+ament_export_dependencies(${dependencies})
+ament_package()

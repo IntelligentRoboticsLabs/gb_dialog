@@ -1,9 +1,9 @@
 repositories:
-  dialogflow_ros:
+  dialogflow_ros2:
     type: git
-    url: https://github.com/jginesclavero/dialogflow_ros.git
-    version: master
+    url: https://github.com/Juancams/dialogflow_ros2.git
+    version: main
   gb_dialog:
     type: git
     url: https://github.com/IntelligentRoboticsLabs/gb_dialog.git
-    version: master
+    version: ros2

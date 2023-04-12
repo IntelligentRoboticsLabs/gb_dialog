@@ -1,5 +1,0 @@
-repositories:
-  ../rosbridge_suite:
-    type: git
-    url: https://github.com/Axel13fr/rosbridge_suite.git
-    version: develop
