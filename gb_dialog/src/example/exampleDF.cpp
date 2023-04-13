@@ -37,6 +37,7 @@
 
 /* Mantainer: Jonatan Gines jonatan.gines@urjc.es */
 #include "gb_dialog/DialogInterface.hpp"
+#include "sound_play.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include <string>
 

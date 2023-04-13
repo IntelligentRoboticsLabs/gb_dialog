@@ -47,8 +47,8 @@ namespace gb_dialog
 {
 
 DialogInterface::DialogInterface()
-: Node("dialog_interface")
-  sc_(this, "/robotsound")
+: Node("dialog_interface"),
+  sc_("/robotsound")
 {
   init();
 }
@@ -82,7 +82,7 @@ void DialogInterface::registerCallback(
     (intent, cb));
 }
 
-void DialogInterface::dfCallback(const DialogflowResult::ConstPtr& result)
+void DialogInterface::dfCallback(const DialogflowResult::SharedPtr result)
 { 
   auto bool_msg = std_msgs::msg::Bool();
   bool_msg.data = false;

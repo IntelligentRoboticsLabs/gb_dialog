@@ -46,6 +46,7 @@
 #include <std_srvs/srv/empty.hpp>
 #include <std_msgs/msg/bool.hpp>
 #include <std_msgs/msg/string.hpp>
+#include "sound_play.hpp"
 #include <regex>
 #include <map>
 
@@ -78,7 +79,7 @@ private:
   sound_play::SoundClient sc_;
 
   void init();
-  void dfCallback(const DialogflowResult::ConstPtr& result);
+  void dfCallback(const DialogflowResult::SharedPtr result);
 };
 };  // namespace gb_dialog
 

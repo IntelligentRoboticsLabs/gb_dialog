@@ -16,23 +16,25 @@ set(dependencies
     sound_play
 )
 
+include_directories(include)
+
 add_library(gb_dialog SHARED
   src/DialogInterface.cpp
+  include/gb_dialog/DialogInterface.hpp
 )
 
 ament_target_dependencies(gb_dialog ${dependencies})
-ament_export_libraries(gb_dialog)
 
 add_executable(example_df_node src/example/exampleDF.cpp)
 ament_target_dependencies(example_df_node ${dependencies})
-
-include_directories(include)
+target_link_libraries(example_df_node ${PROJECT_NAME})
 
 install(TARGETS
   gb_dialog
   example_df_node
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -43,5 +45,7 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+ament_export_libraries(gb_dialog)
+ament_export_include_directories(include)
 ament_export_dependencies(${dependencies})
 ament_package()
