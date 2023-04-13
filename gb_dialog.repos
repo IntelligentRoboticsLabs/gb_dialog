@@ -7,3 +7,7 @@ repositories:
     type: git
     url: https://github.com/IntelligentRoboticsLabs/gb_dialog.git
     version: ros2
+  audio_common:
+    type: git
+    url: https://github.com/Juancams/audio_common.git
+    version: ros2
