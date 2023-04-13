@@ -126,6 +126,8 @@ bool DialogInterface::listen()
   auto future = df_srv->async_send_request(request);
   auto response = future.get();
 
+  RCLCPP_INFO(get_logger(), "[DialogInterface] listening stop...");
+
   return true;
 }
 
