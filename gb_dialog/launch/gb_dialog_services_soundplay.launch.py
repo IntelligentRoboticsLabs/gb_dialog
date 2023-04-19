@@ -19,9 +19,6 @@ def generate_launch_description():
     dialogflow_launch = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(os.path.join(
                                             dialogflow_dir, 'launch/',
-                                            'dialogflow.launch.py')),
-            launch_arguments={
-                'config_file': config_file,
-            }.items())
+                                            'dialogflow.launch.py')),)
 
     return launch.LaunchDescription([soundplay_node, dialogflow_launch])
