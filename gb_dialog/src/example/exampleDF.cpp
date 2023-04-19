@@ -36,6 +36,7 @@
 /* Modified: Juan Carlos Manzanares juancarlos.serrano@urjc.es */
 
 /* Mantainer: Jonatan Gines jonatan.gines@urjc.es */
+/* Mantainer: Juan Carlos Manzanares juancarlos.serrano@urjc.es */
 #include "gb_dialog/DialogInterface.hpp"
 #include "sound_play.hpp"
 #include "rclcpp/rclcpp.hpp"
@@ -76,9 +77,11 @@ class ExampleDF: public DialogInterface
 int main(int argc, char** argv)
 {
   rclcpp::init(argc, argv);
+
   auto forwarder = std::make_shared<gb_dialog::ExampleDF>();
   forwarder->listen();
-  rclcpp::executors::SingleThreadedExecutor executor;
+
+  rclcpp::executors::MultiThreadedExecutor executor;
   executor.add_node(forwarder);
   executor.spin();
 

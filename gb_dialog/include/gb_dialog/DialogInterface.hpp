@@ -36,6 +36,7 @@
 /* Modified: Juan Carlos Manzanares juancarlos.serrano@urjc.es */
 
 /* Mantainer: Jonatan Gines jonatan.gines@urjc.es */
+/* Mantainer: Juan Carlos Manzanares juancarlos.serrano@urjc.es */
 #ifndef GB_DIALOG__DIALOGINTERFACE__HPP
 #define GB_DIALOG__DIALOGINTERFACE__HPP
 

@@ -36,6 +36,7 @@
 /* Modified: Juan Carlos Manzanares juancarlos.serrano@urjc.es */
 
 /* Mantainer: Jonatan Gines jonatan.gines@urjc.es */
+/* Mantainer: Juan Carlos Manzanares juancarlos.serrano@urjc.es */
 #include "gb_dialog/DialogInterface.hpp"
 
 #include <string>
@@ -59,7 +60,7 @@ void DialogInterface::init()
   start_srv_ = "/dialogflow_client/start";
 
   df_result_sub_ = create_subscription<DialogflowResult>(
-      "results_topic_", 1,
+      results_topic_, 1,
       std::bind(&DialogInterface::dfCallback, this, _1));
 
   listening_gui_ = this->create_publisher<std_msgs::msg::Bool>("/dialog_gui/is_listening", 1);
@@ -121,12 +122,18 @@ bool DialogInterface::listen()
   listening_gui_->publish(msg);
   RCLCPP_INFO(get_logger(), "[DialogInterface] listening...");
 
-  auto request = std::make_shared<std_srvs::srv::Empty::Request>();
   auto df_srv = create_client<std_srvs::srv::Empty>(start_srv_);
-  auto future = df_srv->async_send_request(request);
-  auto response = future.get();
 
-  RCLCPP_INFO(get_logger(), "[DialogInterface] listening stop...");
+  while (!df_srv->wait_for_service(std::chrono::seconds(1))) {
+    if (!rclcpp::ok()) {
+      RCLCPP_ERROR(get_logger(), "Interrupted while waiting for the service. Exiting.");
+      return 1;
+    }
+    RCLCPP_INFO(get_logger(), "Service not available, waiting again...");
+  }
+
+  auto request = std::make_shared<std_srvs::srv::Empty::Request>();
+  auto future = df_srv->async_send_request(request);
 
   return true;
 }
