@@ -6,22 +6,23 @@ GB-dialog contains the library DialogInterface from which we will inherit to dev
 ## Installing
 
 ### Install requirements
-If you don't have vcs tool, install it with ```sudo apt-get install python3-vcstool wget```  
+If you don't have vcs tool, install it with:
 
+```bash
+sudo apt-get install python3-vcstool wget
+```
 
 ### Clone dialog packages
 
 First of all, clone all the relevant pacakges for  dialog. Create a folder `dialog` and clone all required packages using the tool `vcs` from  `vcstool`:
 
 ```
-roscd
-cd ../src
+cd <workspace>/src
 mkdir dialog
 cd dialog
 wget https://raw.githubusercontent.com/IntelligentRoboticsLabs/gb_dialog/master/gb_dialog.repos
 vcs import < gb_dialog.repos
 ```
-
 
 ### Setup
 
@@ -32,7 +33,7 @@ Original instructions are in this [README](https://github.com/jginesclavero/dial
 
 ```
 sudo apt-get install portaudio19-dev ros-noetic-rosbridge-server
-roscd dialogflow_ros
+cd <workspace>/src/dialog/dialogflow_ros2
 pip install -r requirements.txt
 ```
 
@@ -40,11 +41,8 @@ pip install -r requirements.txt
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/).
 2. Create a new project.
-3. Go to [DialogFlow Console](https://dialogflow.cloud.google.com/) and create a New Agent.
-4. Select the project and click on Create button.
-5. Go to [Google Cloud Console](https://console.cloud.google.com/) again.
-6. Following the [Kick Setup](https://cloud.google.com/dialogflow/es/docs/quick/setup):
-  1. Enable API
+3. Following the [Kick Setup](https://cloud.google.com/dialogflow/es/docs/quick/setup):
+1. Enable API
   2. Create Service Account and download private keys as JSON
 7. Download the JSON File. Rename and move it t your HOME as ~/df_api.json
 8. Edit `dialogflow_ros/config/param.yaml` and write down your project id. You can find it in the [DialogFlow Console](https://dialogflow.cloud.google.com/), clicking in the gear icon.
