@@ -41,10 +41,12 @@ pip install -r requirements.txt
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/).
 2. Create a new project.
-3. Following the [Kick Setup](https://cloud.google.com/dialogflow/es/docs/quick/setup):
-1. Enable API
-  2. Create Service Account and download private keys as JSON
-7. Download the JSON File. Rename and move it t your HOME as ~/df_api.json
+3. Go to the [Kick Setup](https://cloud.google.com/dialogflow/es/docs/quick/setup)
+4. Enable API
+5. Create [Service Account](https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts?walkthrough_id=iam--create-service-account-keys&start_index=1&hl=es-419&supportedpurview=project#step_index=1).
+6. Create key & download the JSON File. Rename and move it t your HOME as ~/df_api.json
+7. Go to [DialogFlow Console](https://dialogflow.cloud.google.com/)
+8. Create new Agent & delect 
 8. Edit `dialogflow_ros/config/param.yaml` and write down your project id. You can find it in the [DialogFlow Console](https://dialogflow.cloud.google.com/), clicking in the gear icon.
 9. Add `export GOOGLE_APPLICATION_CREDENTIALS='/home/<user>/df_api.json'` to your `.bashrc` and change user
 
