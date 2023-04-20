@@ -32,7 +32,7 @@ Original instructions are in this [README](https://github.com/jginesclavero/dial
 #### Install the requirements for dialogflow_ros:
 
 ```
-sudo apt-get install portaudio19-dev ros-noetic-rosbridge-server
+sudo apt-get install portaudio19-dev
 cd <workspace>/src/dialog/dialogflow_ros2
 pip install -r requirements.txt
 ```
@@ -41,18 +41,18 @@ pip install -r requirements.txt
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/).
 2. Create a new project.
-3. Go to the [Kick Setup](https://cloud.google.com/dialogflow/es/docs/quick/setup)
-4. Enable API
+3. Go to the [Kick Setup](https://cloud.google.com/dialogflow/es/docs/quick/setup).
+4. Enable API.
 5. Create [Service Account](https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts?walkthrough_id=iam--create-service-account-keys&start_index=1&hl=es-419&supportedpurview=project#step_index=1).
-6. Create key & download the JSON File. Rename and move it t your HOME as ~/df_api.json
-7. Go to [DialogFlow Console](https://dialogflow.cloud.google.com/)
-8. Create new Agent & delect 
+6. Create key & download the JSON File. Rename and move it t your HOME as ~/df_api.json.
+7. Go to [DialogFlow Console](https://dialogflow.cloud.google.com/).
+8. Create new Agent & select the project.
 8. Edit `dialogflow_ros/config/param.yaml` and write down your project id. You can find it in the [DialogFlow Console](https://dialogflow.cloud.google.com/), clicking in the gear icon.
-9. Add `export GOOGLE_APPLICATION_CREDENTIALS='/home/<user>/df_api.json'` to your `.bashrc` and change user
+9. Add `export GOOGLE_APPLICATION_CREDENTIALS='/home/<user>/df_api.json'` to your `.bashrc` and change user.
 
 ## Use
 
-Below is an example of using the GB-dialog library ([example file](https://github.com/IntelligentRoboticsLabs/gb_dialog/blob/master/gb_dialog/src/example/exampleDF.cpp)).
+Below is an example of using the GB-dialog library ([example file](https://github.com/IntelligentRoboticsLabs/gb_dialog/blob/ros2/gb_dialog/src/example/exampleDF.cpp).
 First of all we define our new class that inherits from DialogInterface.
 Then, I must use the function ```registerCallback``` to define the handler of the DialogFlow response. You can indicate a specific intent on each callback to receive the DialogFlow responses in differents callbacks, or not to receive all results from DialogFlow in the same callback, up to you!
 
@@ -86,8 +86,8 @@ di.listen();
 Compile and execute the test
 
 ```
-roslaunch gb_dialog gb_dialog_services_soundplay.launch
-rosrun gb_dialog example_df_node
+ros2 launch gb_dialog gb_dialog_services_soundplay.launch.py
+ros2 run gb_dialog example_df_node
 ```
 
 And talk :)
