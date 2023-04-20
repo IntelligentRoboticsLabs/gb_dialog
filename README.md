@@ -20,7 +20,7 @@ First of all, clone all the relevant pacakges for  dialog. Create a folder `dial
 cd <workspace>/src
 mkdir dialog
 cd dialog
-wget https://github.com/IntelligentRoboticsLabs/gb_dialog/blob/ros2/gb_dialog.repos
+wget https://raw.githubusercontent.com/IntelligentRoboticsLabs/gb_dialog/ros2/gb_dialog.repos
 vcs import < gb_dialog.repos
 ```
 
