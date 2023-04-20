@@ -46,6 +46,7 @@ pip install -r requirements.txt
   2. Create Service Account and download private keys as JSON
 7. Download the JSON File. Rename and move it t your HOME as ~/df_api.json
 8. Edit `dialogflow_ros/config/param.yaml` and write down your project id. You can find it in the [DialogFlow Console](https://dialogflow.cloud.google.com/), clicking in the gear icon.
+9. Add `export GOOGLE_APPLICATION_CREDENTIALS='/home/<user>/df_api.json'` to your `.bashrc` and change user
 
 ## Use
 
