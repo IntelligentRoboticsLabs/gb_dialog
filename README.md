@@ -9,7 +9,7 @@ GB-dialog contains the library DialogInterface from which we will inherit to dev
 If you don't have vcs tool, install it with:
 
 ```bash
-sudo apt-get install python3-vcstool wget
+sudo apt-get install python3-vcstool wget libgst-dev libgst7 libgstreamer1.0-* libgstreamer-plugins-base1.0-dev
 ```
 
 ### Clone dialog packages
@@ -24,6 +24,8 @@ wget https://raw.githubusercontent.com/IntelligentRoboticsLabs/gb_dialog/ros2/gb
 vcs import < gb_dialog.repos
 ```
 
+and build the workspace.
+
 ### Setup
 
 Original instructions are in this [README](https://github.com/jginesclavero/dialogflow_ros/tree/master/dialogflow_ros). Use it as reference:
@@ -34,7 +36,7 @@ Original instructions are in this [README](https://github.com/jginesclavero/dial
 ```
 sudo apt-get install portaudio19-dev
 cd <workspace>/src/dialog/dialogflow_ros2
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 #### Google Cloud and DialogFlow Setup
