@@ -22,6 +22,9 @@ mkdir dialog
 cd dialog
 wget https://raw.githubusercontent.com/IntelligentRoboticsLabs/gb_dialog/ros2/gb_dialog.repos
 vcs import < gb_dialog.repos
+
+cd <workspace>
+rosdep install --from-paths src --ignore-src -r -y
 ```
 
 and build the workspace.
