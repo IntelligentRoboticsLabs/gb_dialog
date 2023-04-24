@@ -49,7 +49,7 @@ pip3 install -r requirements.txt
 3. Go to the [Kick Setup](https://cloud.google.com/dialogflow/es/docs/quick/setup).
 4. Enable API.
 5. Create [Service Account](https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts?walkthrough_id=iam--create-service-account-keys&start_index=1&hl=es-419&supportedpurview=project#step_index=1).
-6. Create key & download the JSON File. Rename and move it t your HOME as ~/df_api.json.
+6. Click on your service account. Create key & download the JSON File. Rename and move it t your HOME as ~/df_api.json.
 7. Go to [DialogFlow Console](https://dialogflow.cloud.google.com/).
 8. Create new Agent & select the project.
 8. Edit `dialogflow_ros/config/param.yaml` and write down your project id. You can find it in the [DialogFlow Console](https://dialogflow.cloud.google.com/), clicking in the gear icon.
