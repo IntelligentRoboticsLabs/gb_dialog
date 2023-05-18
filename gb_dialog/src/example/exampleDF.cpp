@@ -51,8 +51,7 @@ namespace gb_dialog
 class ExampleDF: public DialogInterface
 {
   public:
-    ExampleDF(rclcpp::Node::SharedPtr node)
-    : DialogInterface(node)
+    ExampleDF()
     {
       registerCallback(std::bind(&ExampleDF::noIntentCB, this, ph::_1));
       registerCallback(
@@ -98,7 +97,8 @@ int main(int argc, char** argv)
 
   auto node = rclcpp::Node::make_shared("example_dialog");
 
-  auto forwarder = std::make_shared<gb_dialog::ExampleDF>(node);
+  auto forwarder = std::make_shared<gb_dialog::ExampleDF>();
+  forwarder->init(node);
   forwarder->listen();
 
   rclcpp::executors::MultiThreadedExecutor executor;

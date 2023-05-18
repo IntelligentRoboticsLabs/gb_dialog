@@ -58,7 +58,8 @@ class DialogInterface
 public:
   using DialogflowResult = dialogflow_ros2_interfaces::msg::DialogflowResult;
 
-  DialogInterface(rclcpp::Node::SharedPtr node);
+  DialogInterface();
+  void init(rclcpp::Node::SharedPtr node);
 
   bool speak(std::string str);
   bool listen();
@@ -82,7 +83,6 @@ private:
 
   sound_play::SoundClient sc_;
 
-  void init();
   void dfCallback(const DialogflowResult::SharedPtr result);
 };
 };  // namespace gb_dialog

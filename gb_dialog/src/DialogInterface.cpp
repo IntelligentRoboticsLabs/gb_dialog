@@ -47,15 +47,15 @@ using namespace std::placeholders;
 namespace gb_dialog
 {
 
-DialogInterface::DialogInterface(rclcpp::Node::SharedPtr node)
-: node_(node),
-  sc_("/robotsound")
+DialogInterface::DialogInterface()
+: sc_("/robotsound")
 {
-  init();
 }
 
-void DialogInterface::init()
+void DialogInterface::init(rclcpp::Node::SharedPtr node)
 {
+  node_ = node;
+
   results_topic_ = "/dialogflow_client/results";
   start_srv_ = "/dialogflow_client/start";
 
