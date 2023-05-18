@@ -51,25 +51,43 @@ namespace gb_dialog
 class ExampleDF: public DialogInterface
 {
   public:
-    ExampleDF()
+    ExampleDF(rclcpp::Node::SharedPtr node)
+    : DialogInterface(node)
     {
-      this->registerCallback(std::bind(&ExampleDF::noIntentCB, this, ph::_1));
-      this->registerCallback(
+      registerCallback(std::bind(&ExampleDF::noIntentCB, this, ph::_1));
+      registerCallback(
         std::bind(&ExampleDF::welcomeIntentCB, this, ph::_1),
         "Default Welcome Intent");
+      registerCallback(
+        std::bind(&ExampleDF::requestNameIntentCB, this, ph::_1),
+        "RequestName");
+      registerCallback(
+        std::bind(&ExampleDF::getFoodIntentCB, this, ph::_1),
+        "GetFood");
     }
 
     void noIntentCB(dialogflow_ros2_interfaces::msg::DialogflowResult result)
     {
-      RCLCPP_INFO(this->get_logger(), "[ExampleDF] noIntentCB: intent [%s]", result.intent.c_str());
+      RCLCPP_INFO(node_->get_logger(), "[ExampleDF] noIntentCB: intent [%s]", result.intent.c_str());
     }
 
     void welcomeIntentCB(dialogflow_ros2_interfaces::msg::DialogflowResult result)
     {
-      RCLCPP_INFO(this->get_logger(), "[ExampleDF] welcomeIntentCB: intent [%s]", result.intent.c_str());
+      RCLCPP_INFO(node_->get_logger(), "[ExampleDF] welcomeIntentCB: intent [%s]", result.intent.c_str());
       speak(result.fulfillment_text);
     }
 
+    void requestNameIntentCB(dialogflow_ros2_interfaces::msg::DialogflowResult result)
+    {
+      RCLCPP_INFO(node_->get_logger(), "[ExampleDF] requestNameIntentCB: intent [%s]", result.intent.c_str());
+      speak(result.fulfillment_text);
+    }
+
+    void getFoodIntentCB(dialogflow_ros2_interfaces::msg::DialogflowResult result)
+    {
+      RCLCPP_INFO(node_->get_logger(), "[ExampleDF] getFoodIntentCB: intent [%s]", result.intent.c_str());
+      speak(result.fulfillment_text);
+    }
   private:
 };
 }  // namespace gb_dialog
@@ -78,11 +96,13 @@ int main(int argc, char** argv)
 {
   rclcpp::init(argc, argv);
 
-  auto forwarder = std::make_shared<gb_dialog::ExampleDF>();
+  auto node = rclcpp::Node::make_shared("example_dialog");
+
+  auto forwarder = std::make_shared<gb_dialog::ExampleDF>(node);
   forwarder->listen();
 
   rclcpp::executors::MultiThreadedExecutor executor;
-  executor.add_node(forwarder);
+  executor.add_node(node);
   executor.spin();
 
   return 0;

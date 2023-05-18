@@ -47,8 +47,8 @@ using namespace std::placeholders;
 namespace gb_dialog
 {
 
-DialogInterface::DialogInterface()
-: Node("dialog_interface"),
+DialogInterface::DialogInterface(rclcpp::Node::SharedPtr node)
+: node_(node),
   sc_("/robotsound")
 {
   init();
@@ -59,12 +59,12 @@ void DialogInterface::init()
   results_topic_ = "/dialogflow_client/results";
   start_srv_ = "/dialogflow_client/start";
 
-  df_result_sub_ = create_subscription<DialogflowResult>(
+  df_result_sub_ = node_->create_subscription<DialogflowResult>(
       results_topic_, 1,
       std::bind(&DialogInterface::dfCallback, this, _1));
 
-  listening_gui_ = this->create_publisher<std_msgs::msg::Bool>("/dialog_gui/is_listening", 1);
-  speak_gui_ = this->create_publisher<std_msgs::msg::String>("/dialog_gui/talk", 1);
+  listening_gui_ = node_->create_publisher<std_msgs::msg::Bool>("/dialog_gui/is_listening", 1);
+  speak_gui_ = node_->create_publisher<std_msgs::msg::String>("/dialog_gui/talk", 1);
 
   std_msgs::msg::String str_msg;
   std_msgs::msg::Bool bool_msg;
@@ -115,25 +115,36 @@ bool DialogInterface::speak(std::string str)
   return true;
 }
 
-bool DialogInterface::listen()
+bool
+DialogInterface::listen()
 {
   std_msgs::msg::Bool msg;
   msg.data = true;
   listening_gui_->publish(msg);
-  RCLCPP_INFO(get_logger(), "[DialogInterface] listening...");
+  RCLCPP_INFO(node_->get_logger(), "[DialogInterface] listening...");
 
-  auto df_srv = create_client<std_srvs::srv::Empty>(start_srv_);
+  auto node_aux = rclcpp::Node::make_shared("example_dialog_aux");
+
+  auto df_srv = node_aux->create_client<std_srvs::srv::Empty>(start_srv_);
 
   while (!df_srv->wait_for_service(std::chrono::seconds(1))) {
     if (!rclcpp::ok()) {
-      RCLCPP_ERROR(get_logger(), "Interrupted while waiting for the service. Exiting.");
+      RCLCPP_ERROR(node_->get_logger(), "Interrupted while waiting for the service. Exiting.");
       return 1;
     }
-    RCLCPP_INFO(get_logger(), "Service not available, waiting again...");
+    RCLCPP_INFO(node_->get_logger(), "Service not available, waiting again...");
   }
 
   auto request = std::make_shared<std_srvs::srv::Empty::Request>();
-  auto future = df_srv->async_send_request(request);
+  auto result = df_srv->async_send_request(request);
+
+  if (rclcpp::spin_until_future_complete(node_aux, result) !=
+    rclcpp::FutureReturnCode::SUCCESS)
+  {
+    RCLCPP_ERROR(node_->get_logger(), "service call failed :(");
+    df_srv->remove_pending_request(result);
+    return false;
+  }
 
   return true;
 }

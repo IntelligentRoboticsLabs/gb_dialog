@@ -53,12 +53,12 @@
 
 namespace gb_dialog
 {
-class DialogInterface : public rclcpp::Node
+class DialogInterface
 {
 public:
   using DialogflowResult = dialogflow_ros2_interfaces::msg::DialogflowResult;
 
-  DialogInterface();
+  DialogInterface(rclcpp::Node::SharedPtr node);
 
   bool speak(std::string str);
   bool listen();
@@ -66,6 +66,9 @@ public:
   void registerCallback(
     std::function<void(const DialogflowResult & result)> cb,
     std::string intent = "(.*)");
+
+protected:
+  rclcpp::Node::SharedPtr node_;
 
 private:
   bool idle_;
