@@ -61,7 +61,7 @@ public:
   DialogInterface();
   void init(rclcpp::Node::SharedPtr node);
 
-  bool speak(std::string str);
+  bool speak(std::string str, const std::string &voice="voice_kal_diphone", float volume = 1.0f);
   bool listen();
   virtual void listenCallback(DialogflowResult result){}
   void registerCallback(
