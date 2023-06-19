@@ -103,14 +103,14 @@ void DialogInterface::dfCallback(const DialogflowResult::SharedPtr result)
   }
 }
 
-bool DialogInterface::speak(std::string str)
+bool DialogInterface::speak(std::string str, const std::string &voice="voice_kal_diphone", float volume = 1.0f)
 {
   boost::replace_all(str, "_", " ");
   std_msgs::msg::String msg;
   msg.data = str;
   speak_gui_->publish(msg);
 
-  sc_.say(str);
+  sc_.say(str, voice, volume);
 
   return true;
 }
